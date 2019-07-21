@@ -1,3 +1,9 @@
-<html lang="fr">
+{% extends 'Template/MainTemplateView.twig' %}
 
-</html>
+{% block title %}
+    {{ "blog"|title }} {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <h1>Blog</h1>
+{% endblock %}

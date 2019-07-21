@@ -42,14 +42,14 @@ class BlogModule extends ModuleFunction
     public function ListRoute(): void {
         $this->AddRoute(
             '/',
-            'index',
+            [$this, 'index'],
             'blog.index'
         );
     }
 
-    static function index(Request $request): string
+    public function index(): string
     {
-        return parent::Render("index", ["slug" =>  $request->getAttributes()['slug']]);
+        return $this->Render("index");
     }
 
 }

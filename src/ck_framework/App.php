@@ -54,6 +54,7 @@ class App
                 ->withHeader('Location', substr($uri, 0, -1));
         }
 
+        //check if current uri is match route register
         $router = $this->container->get(Router::class);
         $route = $router->match($request);
 
@@ -62,6 +63,7 @@ class App
             return new Response(404, [], $renderer->Render("@error/404"));
         }
 
+        //get params uri
         $params = $route->getParams();
         $request = array_reduce(array_keys($params), function ($request, $key) use ($params) {
             return $request->withAttribute($key, $params[$key]);
@@ -71,6 +73,8 @@ class App
         if (is_string($callback)) {
             $callback = $this->container->get($callback);
         }
+
+        //return response uri
         $response = call_user_func_array($callback, [$request]);
         if (is_string($response)) {
             return new Response(200, [], $response);

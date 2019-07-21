@@ -9,7 +9,6 @@ use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
 use Exception;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ServerRequestInterface as Request;
 
 class HomeModule extends ModuleFunction
 {
@@ -40,14 +39,14 @@ class HomeModule extends ModuleFunction
      */
     public function ListRoute(): void {
         $this->AddRoute(
-            '',
-            'index',
+            '/',
+            [$this, 'index'],
             'home'
         );
     }
 
-    static function index(): string
+    public function index(): string
     {
-        return '<h1>Bienvenue sur le premiere pages</h1>';
+        return $this->Render("index");
     }
 }

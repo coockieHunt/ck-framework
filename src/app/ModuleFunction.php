@@ -20,12 +20,11 @@ class ModuleFunction
     /**
      * @var RendererInterface
      */
-    static $renderer;
+    protected $renderer;
     /**
      * @var ContainerInterface
      */
     protected $container;
-
 
     /**
      * @param Router $router
@@ -36,7 +35,7 @@ class ModuleFunction
      */
     protected function init(Router $router, RendererInterface $renderer, ContainerInterface $container, string $directory){
         $this->router = $router;
-        self::$renderer = $renderer;
+        $this->renderer = $renderer;
         $this->container = $container;
 
         $this->AddViewFolder($directory);
@@ -46,14 +45,15 @@ class ModuleFunction
     /**
      * Add route add prefix if use_prefix is true (default)
      * @param string $uri
-     * @param string $function
+     * @param array $function
      * @param string $name
      * @param bool $use_prefix
      */
-    protected function AddRoute(string $uri, string $function, string $name, bool $use_prefix = true){
+    protected function AddRoute(string $uri, array $function, string $name, bool $use_prefix = true){
         $namespace = explode('\\', get_class($this));
         $prefix = null;
 
+        if ($uri == "/"){$uri = "";};
         if ($use_prefix){
             $key =  strtolower($namespace[2] . '.prefix');
             if ($this->container->has($key)){
@@ -63,7 +63,7 @@ class ModuleFunction
 
         $this->router->get(
             $prefix . $uri,
-            [get_class($this), $function],
+            [$function[0], $function[1]],
             $name
         );
     }
@@ -74,12 +74,12 @@ class ModuleFunction
      * @param array|null $params
      * @return mixed
      */
-    static function Render(string $view, ?array $params = [])
+    protected function Render(string $view, ?array $params = [])
     {
         if (is_null($params)) {
-            return  self::$renderer->Render("@" . static::GetClassName() . "/" . $view);
+            return $this->renderer->Render("@" . $this->GetClassName() . "/" . $view);
         } else
-            return self::$renderer->Render("@" . static::GetClassName() . "/" . $view, $params);
+            return $this->renderer->Render("@" .  $this->GetClassName() . "/" . $view, $params);
     }
 
     /**
@@ -91,7 +91,7 @@ class ModuleFunction
     private function AddViewFolder(string $directory){
         $path = $directory . DIRECTORY_SEPARATOR . 'views';
         if (file_exists ( $path )){
-            self::getRenderer()->addPath(
+            $this->getRenderer()->addPath(
                 $path,
                 $this->GetClassName()
             );
@@ -105,9 +105,9 @@ class ModuleFunction
      * get child name function
      * @return string
      */
-    static function GetClassName() : string
+    private function GetClassName() : string
     {
-        $namespace = explode('\\', get_class());
+        $namespace = explode('\\', get_class($this));
         return end($namespace);
     }
 
@@ -116,8 +116,8 @@ class ModuleFunction
      * get renderer
      * @return RendererInterface
      */
-    static function getRenderer(): RendererInterface
+    public function getRenderer(): RendererInterface
     {
-        return static::$renderer;
+        return $this->renderer;
     }
 }

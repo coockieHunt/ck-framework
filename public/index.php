@@ -21,8 +21,6 @@ foreach ($modules as $module){
 }
 $container = $builder->build();
 
-
-
 //launch app
 $app = new App($container, $modules);
 if (SnippetUtils::IfNotCli()){

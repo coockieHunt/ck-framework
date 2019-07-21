@@ -58,10 +58,8 @@ class App
         $router = $this->container->get(Router::class);
         $route = $router->match($request);
 
-        if (is_null($route)) {
-            $renderer = $this->container->get(RendererInterface::class);
-            return new Response(404, [], $renderer->Render("@error/404"));
-        }
+        //if route not matched
+        if (is_null($route)) {return $this->Return404();}
 
         //get params uri
         $params = $route->getParams();
@@ -83,7 +81,22 @@ class App
         } else {
             throw new Exception('The response is not a string or an instance of ResponseInterface');
         }
-        
+    }
+
+    /**
+     * return 404 response
+     * @return Response
+     */
+    private function Return404()
+    {
+        $container = $this->container;
+        $Renderer = $container->get(RendererInterface::class);
+        $status = 404;
+        $headers = [];
+        $body = $Renderer->Render("@error/404");
+        $response = new Response($status, $headers, $body);
+
+        return $response;
     }
 
     /**

@@ -9,6 +9,7 @@ use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 
 class TwigRenderer implements RendererInterface
@@ -31,11 +32,14 @@ class TwigRenderer implements RendererInterface
     public function __construct(string $defaultPatch, ContainerInterface $container)
     {
         $this->loader = new FilesystemLoader($defaultPatch);
-        $this->twig = new Environment($this->loader,
-            [
-                'debug' => true
-            ]);
-        $this->twig->addExtension(new \Twig\Extension\DebugExtension());
+        $environment = $container->get("twig.environment");
+        $dev = $container->get("development");
+
+        $this->twig = new Environment($this->loader,$environment);
+
+        if($dev){
+            $this->twig->addExtension(new DebugExtension());
+        }
 
         if ($container->has('twig.extension')) {
             $extension = $container->get('twig.extension');

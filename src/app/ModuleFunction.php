@@ -39,7 +39,6 @@ class ModuleFunction
         $this->container = $container;
 
         $this->AddViewFolder($directory);
-
     }
 
     /**
@@ -110,7 +109,6 @@ class ModuleFunction
         $namespace = explode('\\', get_class($this));
         return end($namespace);
     }
-
 
     /**
      * get renderer

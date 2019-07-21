@@ -9,7 +9,9 @@
  */
 
 use app\Modules\Blog\BlogModule;
+use app\Modules\Home\HomeModule;
 
 $modules = [
+    HomeModule::class,
     BlogModule::class
 ];

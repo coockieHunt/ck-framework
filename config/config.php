@@ -1,16 +1,22 @@
 <?php
 
-use ck_framework\Renderer\RendererInterface;
-use ck_framework\Renderer\TwigRendererFactory;
-use ck_framework\Router\Route;
-use function DI\autowire;
-use function DI\factory;
+use ck_framework\TwigExtension\AssetTwigExtension;
+use ck_framework\TwigExtension\RouterTwigExtension;
+use ck_framework\TwigExtension\SelfCutTextTwigExtension;
 
-$space = DIRECTORY_SEPARATOR;
+include("AutoWire.php");
 
+CONST SPACER = DIRECTORY_SEPARATOR;
+$AutoWire = new AutoWire();
 
-return [
-    'view.patch' => $space . '..' . $space . 'app' . $space . 'Views',
-    RendererInterface::class => factory(TwigRendererFactory::class),
-    Route::class => autowire(),
+$config = [
+    'view.patch' => SPACER . '..' . SPACER . 'app' . SPACER . 'Views',
+    'default.style.src' => 'style',
+    'twig.extension' => [
+        SelfCutTextTwigExtension::class,
+        AssetTwigExtension::class,
+        RouterTwigExtension::class
+    ]
 ];
+
+return (array_merge($config, $AutoWire->getAutoWire()));

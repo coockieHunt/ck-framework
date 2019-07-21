@@ -4,6 +4,7 @@ namespace ck_framework;
 
 use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
+use Exception;
 use GuzzleHttp\Psr7\Response;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -30,7 +31,9 @@ class App
     {
         $this->container = $container;
         foreach ($modules as $module) {
-            $this->modules[] = $container->get($module);
+            $module = $container->get($module);
+            $module->ListRoute();
+            $this->modules[] = $module;
         }
     }
 
@@ -38,7 +41,7 @@ class App
      * Run App process
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Exception
+     * @throws Exception
      */
     public function run(ServerRequestInterface $request): ResponseInterface
     {
@@ -74,7 +77,7 @@ class App
         } elseif ($response instanceof ResponseInterface) {
             return $response;
         } else {
-            throw new \Exception('The response is not a string or an instance of ResponseInterface');
+            throw new Exception('The response is not a string or an instance of ResponseInterface');
         }
         
     }

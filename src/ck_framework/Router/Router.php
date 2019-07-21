@@ -13,6 +13,11 @@ class Router
      * @var FastRouteRouter
      */
     private $router;
+    /**
+     * @var array
+     */
+    private $RouteList;
+
 
     public function __construct()
     {
@@ -26,7 +31,10 @@ class Router
      */
     public function get(string $path, $callable, string $name)
     {
-        $this->router->addRoute(new ZendRoute($path, new MiddlewareApp($callable), ['GET'], $name));
+        $NewRoute = new ZendRoute($path, new MiddlewareApp($callable), ['GET'], $name);
+        $this->router->addRoute($NewRoute);
+
+        $this->RouteList[] = $NewRoute;
     }
 
     /**
@@ -47,12 +55,24 @@ class Router
         return null;
     }
 
-    public function generateUri(string $name, array $params = [], array $queryParams = []): ?string
+    public function generateUri(string $name, array $params = [], array $queryParams = [], bool $wire = true): ?string
     {
-        $uri = $this->router->generateUri($name, $params);
-        if (!empty($queryParams)) {
-            return $uri . '?' . http_build_query($queryParams);
+        if ($wire){
+            $uri = $this->router->generateUri($name, $params);
+            if (!empty($queryParams)) {
+                return $uri . '?' . http_build_query($queryParams);
+            }
+        }else{
+            return $name . '?' . http_build_query($queryParams);
         }
         return $uri;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRouteList()
+    {
+        return $this->RouteList;
     }
 }

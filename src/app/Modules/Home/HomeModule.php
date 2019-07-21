@@ -1,7 +1,8 @@
 <?php
 
 
-namespace app\Modules\Blog;
+namespace app\Modules\Home;
+
 
 use app\ModuleFunction;
 use ck_framework\Renderer\RendererInterface;
@@ -10,10 +11,8 @@ use Exception;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-
-class BlogModule extends ModuleFunction
+class HomeModule extends ModuleFunction
 {
-
     CONST DEFINITIONS = __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
 
     /**
@@ -41,15 +40,14 @@ class BlogModule extends ModuleFunction
      */
     public function ListRoute(): void {
         $this->AddRoute(
-            '/',
+            '',
             'index',
-            'blog.index'
+            'home'
         );
     }
 
-    static function index(Request $request): string
+    static function index(): string
     {
-        return parent::Render("index", ["slug" =>  $request->getAttributes()['slug']]);
+        return '<h1>Bienvenue sur le premiere pages</h1>';
     }
-
 }

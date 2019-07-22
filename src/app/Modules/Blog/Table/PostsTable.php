@@ -43,6 +43,17 @@ class PostsTable
         return $post;
     }
 
+    public function FindById(int $id){
+        $request = $this->PDO
+            ->prepare('SELECT * FROM posts WHERE posts.id = :id');
+        $request->bindValue(':id', $id, PDO::PARAM_STR);
+        $request->execute();
+        $request->setFetchMode(PDO::FETCH_CLASS, PostsEntity::class);
+        $post = $request->fetch();
+
+        return $post;
+    }
+
     public function CountAll()
     {
         $posts = $this->PDO

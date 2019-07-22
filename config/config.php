@@ -15,6 +15,7 @@ $config = [
     'development' => true,
 
     //configuration
+    'download.patch' => dirname(__DIR__) . SPACER . 'public' . SPACER . 'download',
     'view.patch' => SPACER . '..' . SPACER . 'app' . SPACER . 'Views',
     'default.style.src' => 'style',
 

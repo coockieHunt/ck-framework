@@ -62,21 +62,22 @@ class BlogModule extends ModuleFunction
     }
 
     public function show(Request $request){
+        //get uri Attribute
         $RequestSlug = $request->getAttribute('slug');
         $RequestId = $request->getAttribute('id');
 
+        //try get article
         $post = $this->postsTable->FindBySlug($RequestSlug);
-        $postId = $post->id;
+        if (empty($post)){$post = $this->postsTable->FindById($RequestId);}
 
-        if ($postId == $RequestId){
-            return $this->Render("show" ,
-                [
-                    'post' => $post
-                ]
-            );
-        }else{
-            return $this->router->redirect("posts.show", ['slug' => $RequestSlug, 'id' => $post->id]);
-        }
+        //get id end slug request
+        $postId = $post->id;
+        $postSlug = $post->slug;
+
+        //render page or redirect if uri not clear (slug or id not complete)
+        if ($postId == $RequestId && $postSlug == $RequestSlug){
+            return $this->Render("show" , ['post' => $post]);
+        }else{return $this->router->redirect("posts.show", ['slug' => $postSlug, 'id' => $postId]);}
     }
 
     public function index()

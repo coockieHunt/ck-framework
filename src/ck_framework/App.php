@@ -93,7 +93,7 @@ class App
         $Renderer = $container->get(RendererInterface::class);
         $status = 404;
         $headers = [];
-        $body = $Renderer->Render("@error/404");
+        $body = $Renderer->Render("@error/404NotFound");
         $response = new Response($status, $headers, $body);
 
         return $response;

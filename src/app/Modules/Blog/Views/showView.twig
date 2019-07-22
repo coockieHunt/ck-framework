@@ -1,0 +1,13 @@
+{% extends 'Template/MainTemplateView.twig' %}
+
+{% block title %}
+    {{ "blog"|title }} {{ parent() }}
+{% endblock %}
+
+{% block body %}
+        <div class="p-5 px-md-4" style="background-color: #007bff;"><h1 style="color: white" class="container">{{ post.name }}</h1></div>
+        <div class="container">
+            <p style="margin-top: 20px">{{ post.content|nl2br }}</p>
+            <span class="font-weight-light blockquote-footer"> Crée le {{ post.create_at|date("m/d/Y à g") }}  heure  {{post.create_at|date("i") }}</span>
+        </div>
+{% endblock %}

@@ -9,6 +9,8 @@ use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
 use Exception;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface as Request;
+
 
 
 class BlogModule extends ModuleFunction
@@ -51,6 +53,30 @@ class BlogModule extends ModuleFunction
             [$this, 'index'],
             'posts.index'
         );
+
+        $this->AddRoute(
+            '/{slug:[a-z\-0-9]+}-{id:[0-9]+}',
+            [$this, 'show'],
+            'posts.show'
+        );
+    }
+
+    public function show(Request $request){
+        $RequestSlug = $request->getAttribute('slug');
+        $RequestId = $request->getAttribute('id');
+
+        $post = $this->postsTable->FindBySlug($RequestSlug);
+        $postId = $post->id;
+
+        if ($postId == $RequestId){
+            return $this->Render("show" ,
+                [
+                    'post' => $post
+                ]
+            );
+        }else{
+            return $this->router->redirect("posts.show", ['slug' => $RequestSlug, 'id' => $post->id]);
+        }
     }
 
     public function index()

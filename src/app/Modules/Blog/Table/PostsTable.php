@@ -32,6 +32,17 @@ class PostsTable
         return $posts;
     }
 
+    public function FindBySlug(string $slug){
+        $request = $this->PDO
+            ->prepare('SELECT * FROM posts WHERE posts.slug = :slug');
+        $request->bindValue(':slug', $slug, PDO::PARAM_STR);
+        $request->execute();
+        $request->setFetchMode(PDO::FETCH_CLASS, PostsEntity::class);
+        $post = $request->fetch();
+
+        return $post;
+    }
+
     public function CountAll()
     {
         $posts = $this->PDO

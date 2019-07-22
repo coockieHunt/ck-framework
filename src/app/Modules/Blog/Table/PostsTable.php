@@ -32,6 +32,17 @@ class PostsTable
         return $posts;
     }
 
+    public function FindAll() :array{
+        $request = $this->PDO
+            ->prepare('SELECT * FROM posts');
+
+        $request->execute();
+        $request->setFetchMode(PDO::FETCH_CLASS, PostsEntity::class);
+        $posts = $request->fetchAll();
+
+        return $posts;
+    }
+
     public function FindBySlug(string $slug){
         $request = $this->PDO
             ->prepare('SELECT * FROM posts WHERE posts.slug = :slug');

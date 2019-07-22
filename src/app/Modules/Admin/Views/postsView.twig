@@ -1,0 +1,59 @@
+{% extends 'Template/DashboardTemplateView.twig' %}
+
+{% block title %}
+    {{ "post"|title }}
+{% endblock %}
+
+{% block body %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Information :</h1>
+        <p class="mb-4">DataTables is a listing posts register in the blog, if you want to add some, viewer  <a target="_blank" href="">this pages</a>.</p>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Routing listing</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Slug</th>
+                            <th>Content</th>
+                            <th>create at</th>
+                            <th>Update at</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for post in posts %}
+                            <tr>
+                                <td>{{ post.id }}</td>
+                                <td>{{ post.name }}</td>
+                                <td>{{ post.slug  }}</td>
+                                <td>{{ SelfCut(post.content , 0 ,30)  }}</td>
+                                <td>{{ post.create_at|date("m/d/Y à g:i") }}</td>
+                                <td>{{ post.update_at|date("m/d/Y à g:i") }}</td>
+                                <td>
+                                    <a href="" class="btn btn-primary btn-icon-split">
+                                        <span class="icon text-white-50">
+                                          <i class="fas fa-sign-in-alt"></i>
+                                        </span>
+                                        <span class="text">Open</span>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

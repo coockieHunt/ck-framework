@@ -1,0 +1,57 @@
+{% extends 'Template/DashboardTemplateView.twig' %}
+
+{% block title %}
+    {{ "routing"|title }}
+{% endblock %}
+
+{% block body %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Information :</h1>
+        <p class="mb-4">DataTables is a listing of all the routes registered in the system, if you want to add some, viewer consulted  <a target="_blank" href="">this pages</a>.</p>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Routing listing</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Patch</th>
+                                <th>Methods</th>
+                                <th>Module</th>
+                                <th>Function</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for route in routing %}
+                            <tr>
+                                <td>{{ route.name }}</td>
+                                <td>{{ route.path }}</td>
+                                <td>{{ route.methods  }}</td>
+                                <td>{{ route.name|split('.')[0]  }}</td>
+                                <td>{{ route.middleware[1] }}</td>
+                                <td>
+                                    <a href="" class="btn btn-primary btn-icon-split">
+                                        <span class="icon text-white-50">
+                                          <i class="fas fa-sign-in-alt"></i>
+                                        </span>
+                                        <span class="text">Open</span>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -33,10 +33,11 @@ class Router
      */
     public function get(string $path, $callable, string $name)
     {
-        $NewRoute = new ZendRoute($path, new MiddlewareApp($callable), ['GET'], $name);
+        $methods = 'GET';
+        $NewRoute = new ZendRoute($path, new MiddlewareApp($callable), [$methods], $name);
         $this->router->addRoute($NewRoute);
 
-        $this->RouteList[] = $NewRoute;
+        $this->RouteList[] = ['path' => $path, 'middleware' => $callable, 'methods' => $methods, 'name' => $name];
     }
 
     /**

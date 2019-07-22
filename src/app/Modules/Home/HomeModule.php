@@ -41,7 +41,7 @@ class HomeModule extends ModuleFunction
         $this->AddRoute(
             '/',
             [$this, 'index'],
-            'home'
+            'home.index'
         );
     }
 

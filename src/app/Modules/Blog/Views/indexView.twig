@@ -1,0 +1,28 @@
+{% extends 'Template/MainTemplateView.twig' %}
+
+{% block title %}
+    {{ "blog"|title }} {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% for post in posts %}
+                        <div class="card mt-3 mb-3">
+                            <div class="card-header">
+                                {{ post.name }}
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text">{{ SelfCut(post.content, 0, 500, '...')}}</p>
+                                <a href="" class="btn btn-outline-primary mb-2">En s'avoir plus</a>
+                                <footer class="blockquote-footer">Crée le {{ post.create_at|date("m/d/Y à g:i") }} </footer>
+                            </div>
+                        </div>
+        {% endfor %}
+        {{ Pagination('bootstrap', dataPagination) }}
+    </div>
+
+
+
+
+{% endblock %}

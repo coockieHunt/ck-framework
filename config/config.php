@@ -1,5 +1,6 @@
 <?php
 
+use ck_framework\Twig\PaginationTwigExtension;
 use ck_framework\TwigExtension\AssetTwigExtension;
 use ck_framework\TwigExtension\RouterTwigExtension;
 use ck_framework\TwigExtension\SelfCutTextTwigExtension;
@@ -32,7 +33,8 @@ $config = [
     'twig.extension' => [
         SelfCutTextTwigExtension::class,
         AssetTwigExtension::class,
-        RouterTwigExtension::class
+        RouterTwigExtension::class,
+        PaginationTwigExtension::class
     ]
 ];
 

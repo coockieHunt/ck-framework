@@ -88,7 +88,7 @@ class ModuleFunction
      * @throws Exception
      */
     private function AddViewFolder(string $directory){
-        $path = $directory . DIRECTORY_SEPARATOR . 'views';
+        $path = $directory . DIRECTORY_SEPARATOR . 'Views';
         if (file_exists ( $path )){
             $this->getRenderer()->addPath(
                 $path,

@@ -3,6 +3,8 @@
 
 namespace ck_framework\Router;
 
+use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Router\FastRouteRouter;
 use Zend\Expressive\Router\Route as ZendRoute;
@@ -66,6 +68,22 @@ class Router
             return $name . '?' . http_build_query($queryParams);
         }
         return $uri;
+    }
+
+    /**
+     * Return redirect response
+     *
+     * @param string $path
+     * @param array $params
+     * @param array $queryParams
+     * @return ResponseInterface
+     */
+    public function redirect(string $path, array $params = [], array $queryParams = []): ResponseInterface
+    {
+        $redirectUri = $this->generateUri($path, $params, $queryParams);
+        return (new Response())
+            ->withStatus(301)
+            ->withHeader('location', $redirectUri);
     }
 
     /**

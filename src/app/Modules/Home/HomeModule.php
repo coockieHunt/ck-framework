@@ -47,6 +47,7 @@ class HomeModule extends ModuleFunction
 
     public function index(): string
     {
+
         return $this->Render("index");
     }
 }

@@ -8,6 +8,7 @@
  *      ];
  */
 
+use app\Modules\Admin\AdminModule;
 use app\Modules\Blog\BlogModule;
 use app\Modules\File\FileModule;
 use app\Modules\Home\HomeModule;
@@ -15,5 +16,6 @@ use app\Modules\Home\HomeModule;
 $modules = [
     HomeModule::class,
     BlogModule::class,
-    FileModule::class
+    FileModule::class,
+    AdminModule::class,
 ];

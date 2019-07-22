@@ -1,11 +1,18 @@
 <html lang="fr">
 <head>
     {{ css("bootstrap.min.css") }}
+    {{ css('font-awesome.min.css') }}
+    {{ css('mainTemplate.css') }}
+
     <title>{% block title %} - {{ 'coockie'|title }}&nbsp;{% endblock %}</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Coockie</a>
+        <a class="navbar-brand lock" href="#">
+                <i class="fas fa-cookie icon-unlock"></i>
+                <i class="fas fa-cookie-bite icon-lock"></i>
+             Coockie
+        </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -23,5 +30,6 @@
     {% block body %}
         {# body content here#}
     {% endblock %}
+    {{ js('bootstrap.min.js') }}
 </body>
 </html>

@@ -4,14 +4,20 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900|Roboto:100,300,400,500,700,900" rel="stylesheet" />
     {{ css("404.css") }}
     {{ css("bootstrap.min.css") }}
+    {{ css("main.css") }}
+    {{ css('font-awesome.min.css') }}
+    {{ css('animate.css') }}
+
 </head>
-<body>
+<body class="bg-main">
     <div class="container">
         <div class="error-wrapper">
-            <div class="man-icon"></div>
-            <h3 class="title">404</h3>
+            <i class="fas fa-poop man-icon animated bounce"></i>
+            <h3>404</h3>
             <p class="info">Oh! Page not found</p>
-            <a href="{{ generateUri('home.index') }}" type="button" class="home-btn">HOME</a>
+            <div class="home-btn">
+                <a href="{{ generateUri('home.index') }}"><button type="button" class="btn btn-light btn-lg">Go Home</button></a>
+            </div>
         </div>
     </div>
 </body>

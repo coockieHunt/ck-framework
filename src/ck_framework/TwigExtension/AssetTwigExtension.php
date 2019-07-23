@@ -52,14 +52,14 @@ class AssetTwigExtension extends AbstractExtension
         echo "<link rel='stylesheet' type='text/css' href='{$link}'>";
     }
 
-    public function load_js(string $link, ?bool $locally = true): void
+    public function load_js(string $link, ?string $script = null, ?bool $locally = true): void
     {
         if ($locally){
             $dir = $this->dir;
             $link = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/'. $dir .'/js/' . $link;
         }
 
-        echo "<script src='{$link}' type='text/javascript'></script>";
+        echo "<script src='{$link}' type='text/javascript'>{$script}</script>";
     }
 
     public function load_img(string $link, ?bool $locally = true): void

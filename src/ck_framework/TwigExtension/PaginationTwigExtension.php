@@ -36,10 +36,10 @@ class PaginationTwigExtension extends AbstractExtension
      * @param Pagination $pagination
      * @throws Exception
      */
-    public function AddPagination($template, Pagination $pagination): void
+    public function AddPagination($template, Pagination $pagination, string $route_name): void
     {
         $RenderPagination = new RendererPagination();
-        $Render = $RenderPagination->Renderer($template, $pagination, $this->router);
+        $Render = $RenderPagination->Renderer($template, $pagination, $route_name, $this->router);
         echo implode("\n", $Render);
     }
 }

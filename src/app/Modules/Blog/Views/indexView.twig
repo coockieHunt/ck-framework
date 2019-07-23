@@ -6,7 +6,7 @@
 
 {% block body %}
     <div class="container">
-        {% for post in routing %}
+        {% for post in posts %}
                         <div class="card mt-3 mb-3">
                             <div class="card-header">
                                 {{ post.name }}
@@ -19,6 +19,6 @@
                             </div>
                         </div>
         {% endfor %}
-        {{ Pagination('bootstrap', dataPagination) }}
+        {{ Pagination('bootstrap', dataPagination, 'posts.index') }}
     </div>
 {% endblock %}

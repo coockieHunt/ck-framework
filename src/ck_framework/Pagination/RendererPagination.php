@@ -27,18 +27,19 @@ class RendererPagination
 
     /**
      * @param string $template
-     * @param Pagination $paginations
+     * @param Pagination $pagination
+     * @param string $route_name
      * @param Router $router
      * @return array
      * @throws Exception
      */
-    public function Renderer(string $template, Pagination $paginations, Router $router)
+    public function Renderer(string $template, Pagination $pagination, string $route_name, Router $router)
     {
         if (array_key_exists($template, $this->Template)) {
 
-                $bar_element = $paginations->getBarElementDisplay();
-                $current_step = $paginations->getCurrentStep();
-                $Number_step = $paginations->getNumberStep();
+                $bar_element = $pagination->getBarElementDisplay();
+                $current_step = $pagination->getCurrentStep();
+                $Number_step = $pagination->getNumberStep();
 
             $frac = $bar_element / 2;
             if (!is_float($frac)) {
@@ -65,7 +66,7 @@ class RendererPagination
             for ($i = 1; $i <= $Number_step; $i++) {
                 $element = $template::get()['element'];
                 if (in_array($i, $catch_number)) {
-                    $gen_uri = $router->generateUri('posts.index', [], ["p" => $i]);
+                    $gen_uri = $router->generateUri($route_name, [], ["p" => $i]);
 
                     switch ($i) {
                         case $first:

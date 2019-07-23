@@ -95,7 +95,6 @@ class BlogModule extends ModuleFunction
         $posts = $this->postsTable->FindResultLimit($Pagination->GetLimit(), $Pagination->getDbElementDisplay());
 
         if (empty($posts)){return $this->router->redirect('posts.index', [], ['p' => 1]);}
-
         return $this->Render("index" ,
             [
                 'posts' => $posts,

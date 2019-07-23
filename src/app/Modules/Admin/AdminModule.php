@@ -6,6 +6,7 @@ namespace app\Modules\Admin;
 
 use app\ModuleFunction;
 use app\Modules\Blog\Table\PostsTable;
+use ck_framework\Pagination\Pagination;
 use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
 use Psr\Container\ContainerInterface;
@@ -56,7 +57,14 @@ class AdminModule extends ModuleFunction
     }
 
     public function index(){
-       return $this->Render('index');
+        $count = [
+            "route" => count($this->router->getRouteList()),
+            "posts" => count($this->postsTable->FindAll()),
+        ];
+
+       return $this->Render('index',[
+           "count" => $count
+       ]);
     }
 
     public function routing(){
@@ -70,11 +78,24 @@ class AdminModule extends ModuleFunction
     }
 
     public function posts(){
-        $postsList = $this->postsTable->FindAll();
+        if (!isset($_GET['p'])) {$current = 1;} else {$current = (int)$_GET['p'];}
+
+        $postsCount = $this->postsTable->CountAll();
+        $Pagination = new Pagination(
+            10,
+            5,
+            $postsCount[0]
+        );
+
+        $Pagination->setCurrentStep($current);
+        $posts = $this->postsTable->FindResultLimit($Pagination->GetLimit(), $Pagination->getDbElementDisplay());
+
+        if (empty($posts)){return $this->router->redirect('admin.posts', [], ['p' => 1]);}
 
         return $this->Render('posts',
             [
-                'posts' => $postsList
+                'posts' => $posts,
+                'dataPagination' => $Pagination
             ]
         );
     }

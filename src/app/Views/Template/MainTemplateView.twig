@@ -19,7 +19,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item active">
-                    <a class="nav-link" href="{{ generateUri('home') }}">Accueille</a>
+                    <a class="nav-link" href="{{ generateUri('home.index') }}">Accueille</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ generateUri('posts.index') }}">Blog</a>
@@ -30,6 +30,8 @@
     {% block body %}
         {# body content here#}
     {% endblock %}
+    {{ js('jquery-3.4.1.min.js') }}
     {{ js('bootstrap.min.js') }}
+    {{ js('konami.js') }}
 </body>
 </html>

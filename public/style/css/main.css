@@ -5,3 +5,8 @@
 .lock:hover .icon-lock {
     display: inline;
 }
+
+.bg-main {
+    background-color: #4e73df !important;
+    color: white;
+}

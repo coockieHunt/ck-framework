@@ -23,21 +23,32 @@ class Pagination
      * @var int
      */
     private $number_step;
+    /**
+     * @var string
+     */
+    private $redirect_uri;
 
     /**
      * Pagination constructor.
      * @param int $db_element_display
      * @param int $bar_element_display
      * @param int $number_db_element
+     * @param string $redirect_uri
      */
-    public function __construct(int $db_element_display, int $bar_element_display, int $number_db_element)
+    public function __construct(int $db_element_display, int $bar_element_display, int $number_db_element, string $redirect_uri)
     {
         $this->DbElementDisplay = $db_element_display;
         $this->BarElementDisplay = $bar_element_display;
+        $this->redirect_uri = $redirect_uri;
+
 
         $this->number_step = ceil($number_db_element / $this->DbElementDisplay);
 
         $this->setCurrentStep(0);
+    }
+
+    public function GetMaxUserStep(){
+        return $this->DbElementDisplay + 1;
     }
 
     /**
@@ -94,5 +105,13 @@ class Pagination
     public function getNumberStep(): int
     {
         return $this->number_step;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedirectUri(): string
+    {
+        return $this->redirect_uri;
     }
 }

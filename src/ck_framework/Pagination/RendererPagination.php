@@ -28,18 +28,18 @@ class RendererPagination
     /**
      * @param string $template
      * @param Pagination $pagination
-     * @param string $route_name
      * @param Router $router
      * @return array
      * @throws Exception
      */
-    public function Renderer(string $template, Pagination $pagination, string $route_name, Router $router)
+    public function Renderer(string $template, Pagination $pagination, Router $router)
     {
         if (array_key_exists($template, $this->Template)) {
 
-                $bar_element = $pagination->getBarElementDisplay();
-                $current_step = $pagination->getCurrentStep();
-                $Number_step = $pagination->getNumberStep();
+            $bar_element = $pagination->getBarElementDisplay();
+            $current_step = $pagination->getCurrentStep();
+            $Number_step = $pagination->getNumberStep();
+            $redirect_uri = $pagination->getRedirectUri();
 
             $frac = $bar_element / 2;
             if (!is_float($frac)) {
@@ -55,8 +55,8 @@ class RendererPagination
             }
 
             $template = $this->Template[$template];
-            $frame = $template::get('justify-content-center')['frame'];
-            $current = $template::get()['current'];
+            $frame = $template::get('justify-content-left')['frame'];
+            $current = $template::get('float: right;')['current'];
 
             $rslt[] = $frame['start'];
 
@@ -66,7 +66,7 @@ class RendererPagination
             for ($i = 1; $i <= $Number_step; $i++) {
                 $element = $template::get()['element'];
                 if (in_array($i, $catch_number)) {
-                    $gen_uri = $router->generateUri($route_name, [], ["p" => $i]);
+                    $gen_uri = $router->generateUri($redirect_uri, [], ["p" => $i]);
 
                     switch ($i) {
                         case $first:

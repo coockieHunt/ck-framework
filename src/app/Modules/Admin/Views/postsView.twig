@@ -18,42 +18,55 @@
                 <h6 class="m-0 font-weight-bold text-primary">Routing listing</h6>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                        <caption>{{ Pagination('bootstrap', dataPagination , 'admin.posts') }}</caption>
-                        <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th>Slug</th>
-                            <th>Content</th>
-                            <th>create at</th>
-                            <th>Update at</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        {% for post in posts %}
+                <div class="table-responsive-sm">
+                    <div class="row">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
                             <tr>
-                                <td>{{ post.id }}</td>
-                                <td>{{ post.name }}</td>
-                                <td>{{ post.slug  }}</td>
-                                <td>{{ SelfCut(post.content , 0 ,30)  }}</td>
-                                <td>{{ post.create_at|date("m/d/Y à g:i") }}</td>
-                                <td>{{ post.update_at|date("m/d/Y à g:i") }}</td>
-                                <td>
-                                    <a href="" class="btn btn-primary btn-icon-split">
-                                        <span class="icon text-white-50">
-                                          <i class="fas fa-sign-in-alt"></i>
-                                        </span>
-                                        <span class="text">Open</span>
-                                    </a>
-                                </td>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Slug</th>
+                                <th>Content</th>
+                                <th>create at</th>
+                                <th>Update at</th>
+                                <th>Actions</th>
                             </tr>
-                        {% endfor %}
+                            </thead>
+                            <tbody>
 
-                    </table>
+                            {% for post in posts %}
+                                <tr>
+                                    <td>{{ post.id }}</td>
+                                    <td>{{ post.name }}</td>
+                                    <td><span title="{{ post.slug  }}">{{ post.slug }}</span></td>
+
+                                    <td>{{ SelfCut(post.content , 0 ,30)  }}</td>
+                                    <td>{{ post.create_at|date("m/d/Y") }} <br> {{ post.create_at|date("H:i:s") }}</td>
+                                    <td>{{ post.update_at|date("m/d/Y") }} <br> {{ post.update_at|date("H:i:s") }}</td>
+                                    <td>
+                                        <a href="{{ generateUri('posts.show', {slug: post.slug, id: post.id}) }}" class="mr-1">
+                                            <i class="fas fa-expand-arrows-alt text-success"></i>
+                                        </a>
+                                        <a href="{{ generateUri('admin.posts.edit', {slug: post.slug, id: post.id}) }}">
+                                            <i class="fas fa-pen text-warning"></i>
+                                        </a>
+                                        <a href="{{ generateUri('admin.posts', {}, {'delete' : post.slug ~ '-' ~ post.id}) }}">
+                                            <i class="fas fa-trash-alt text-danger"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12 col-md-8">
+                          {{ dataPagination.CurrentStep }} / {{ dataPagination.GetMaxUserStep }}
+                      </div>
+                    <div class="col-sm-12 col-md-4 float" style="display: flex; justify-content: flex-end">
+                        {{ Pagination('bootstrap', dataPagination) }}
+                    </div>
+                    </div>
+
                 </div>
             </div>
         </div>

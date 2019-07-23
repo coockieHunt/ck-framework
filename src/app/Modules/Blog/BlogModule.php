@@ -82,19 +82,23 @@ class BlogModule extends ModuleFunction
 
     public function index()
     {
+        $redirect = 'posts.index';
+
         if (!isset($_GET['p'])) {$current = 1;} else {$current = (int)$_GET['p'];}
 
         $postsCount = $this->postsTable->CountAll();
         $Pagination = new Pagination(
             10,
             5,
-            $postsCount[0]
+            $postsCount[0],
+            $redirect
+
         );
 
         $Pagination->setCurrentStep($current);
         $posts = $this->postsTable->FindResultLimit($Pagination->GetLimit(), $Pagination->getDbElementDisplay());
 
-        if (empty($posts)){return $this->router->redirect('posts.index', [], ['p' => 1]);}
+        if (empty($posts)){return $this->router->redirect($redirect, [], ['p' => 1]);}
         return $this->Render("index" ,
             [
                 'posts' => $posts,

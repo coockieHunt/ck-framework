@@ -10,6 +10,7 @@ use ck_framework\Pagination\Pagination;
 use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 class AdminModule extends ModuleFunction
 {
@@ -54,6 +55,12 @@ class AdminModule extends ModuleFunction
             [$this, 'posts'],
             'admin.posts'
         );
+
+        $this->AddRoute(
+            '/posts/edit/{slug:[a-z\-0-9]+}-{id:[0-9]+}',
+            [$this, 'postEdit'],
+            'admin.posts.edit'
+        );
     }
 
     public function index(){
@@ -78,24 +85,43 @@ class AdminModule extends ModuleFunction
     }
 
     public function posts(){
+        $redirect = 'admin.posts';
+
         if (!isset($_GET['p'])) {$current = 1;} else {$current = (int)$_GET['p'];}
 
         $postsCount = $this->postsTable->CountAll();
         $Pagination = new Pagination(
             10,
-            5,
-            $postsCount[0]
+            9,
+            $postsCount[0],
+            $redirect
         );
 
         $Pagination->setCurrentStep($current);
         $posts = $this->postsTable->FindResultLimit($Pagination->GetLimit(), $Pagination->getDbElementDisplay());
 
-        if (empty($posts)){return $this->router->redirect('admin.posts', [], ['p' => 1]);}
+        if (empty($posts)){return $this->router->redirect($redirect, [], ['p' => 1]);}
 
         return $this->Render('posts',
             [
                 'posts' => $posts,
                 'dataPagination' => $Pagination
+            ]
+        );
+    }
+
+    public function postEdit(Request $request){
+        //get uri Attribute
+        $RequestSlug = $request->getAttribute('slug');
+        $RequestId = $request->getAttribute('id');
+
+        //try get article
+        $post = $this->postsTable->FindBySlug($RequestSlug);
+        if (empty($post)){$post = $this->postsTable->FindById($RequestId);}
+
+        return $this->Render('postEdit',
+            [
+                'post' => $post,
             ]
         );
     }

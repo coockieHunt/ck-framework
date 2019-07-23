@@ -1,0 +1,47 @@
+{% extends 'Template/DashboardTemplateView.twig' %}
+
+{% block title %}
+    {{ "post edit"|title }}
+{% endblock %}
+{% set ipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent maximus, mauris quis placerat lacinia, lectus nulla molestie metus, vel condimentum enim nisi et tortor. Suspendisse bibendum facilisis tellus at elementum. Quisque vel orci lectus. Vivamus nunc massa, placerat in vulputate ac, consequat vitae sem. Pellentesque iaculis iaculis justo, sed dapibus sem aliquet nec. Vivamus facilisis, nisi scelerisque pretium vestibulum, dui urna iaculis nisi, et placerat lacus odio vel arcu. Nam laoreet velit quis eros faucibus, nec elementum enim tempor. Nunc sed gravida nulla. Cras eget mauris in metus laoreet feugiat. Maecenas laoreet, orci lobortis feugiat egestas, metus ante dictum sapien, in sollicitudin tortor mi nec sem. Pellentesque suscipit, lorem nec commodo imperdiet, massa tortor feugiat lorem, id consequat lacus lorem eu dolor. Sed tellus eros, condimentum ut semper a, maximus sit amet dolor. Aliquam vitae libero id nunc pulvinar luctus. Nullam consectetur nibh ante, ut tempus lacus convallis vel. Nulla sodales facilisis volutpat." %}
+{% block body %}
+<div class="content-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Information :</h1>
+    <p class="mb-4">This form is intended to modify a specific article. if you want to add some, viewer <a target="_blank" href="">this pages</a>.</p>
+
+    <form>
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Name</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    id="exampleFormControlInput1"
+                    placeholder="This is an article title"
+                    value="{{ post.name }}"
+            >
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlInput1">slug</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    id="exampleFormControlInput1"
+                    placeholder="this-is-an-article-slug"
+                    value="{{ post.slug }}"
+            >
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">Content</label>
+            <textarea
+                    class="form-control"
+                    id="exampleFormControlTextarea1"
+                    rows="10"
+                    content=""
+                    placeholder="{{ ipsum }}"
+            >{{ post.content }}
+            </textarea>
+        </div>
+    </form>
+</div>
+{% endblock %}

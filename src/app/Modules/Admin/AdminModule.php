@@ -66,6 +66,19 @@ class AdminModule extends ModuleFunction
         );
 
         $this->AddRoute(
+            '/posts/new',
+            [$this, 'postNew'],
+            'admin.posts.new'
+        );
+
+        $this->AddRoute(
+            '/posts/new',
+            [$this, 'postNew'],
+            'admin.posts.new.post',
+            'POST'
+        );
+
+        $this->AddRoute(
             '/posts/edit/{id:[0-9]+}',
             [$this, 'postEdit'],
             'admin.posts.edit.post',
@@ -84,7 +97,7 @@ class AdminModule extends ModuleFunction
        ]);
     }
 
-    public function routing(Request $request){
+    public function routing(){
         $list = $this->router->getRouteList();
 
         return $this->Render('routing',
@@ -156,5 +169,27 @@ class AdminModule extends ModuleFunction
                 'post' => $post,
             ]
         );
+    }
+
+    public function postNew(Request $request){
+        if ($request->getMethod() == 'POST'){
+            $fail = false;
+            $body = $request->getParsedBody();
+
+            //check if slug exist
+            $SlugCheck = $this->postsTable->FindBySlug($body['slug']);
+
+            if ($SlugCheck != false) {$fail[] = [true, 'slug_already_exists'];}
+            if (preg_match('/\s/', $body['slug'])) {$fail[] = [true, 'slug_contains_whitespace'];}
+            if (preg_match('/[0-9]+/', $body['slug'])) {$fail[] = [true, 'slug_contains_int'];}
+
+            if (!$fail) {
+                return $this->router->redirect('admin.posts.new');
+            }else{
+                dd($fail);
+            }
+        }
+
+        return $this->Render('postNew');
     }
 }

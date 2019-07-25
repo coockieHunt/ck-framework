@@ -12,15 +12,25 @@
         <h1 class="h3 mb-2 text-gray-800">Information :</h1>
         <p class="mb-4">DataTables is a listing posts register in the blog, if you want to add some, viewer  <a target="_blank" href="">this pages</a>.</p>
 
+        <a href="{{ generateUri('admin.posts.new') }}" class="btn btn-success btn-icon-split mb-2">
+                                        <span class="icon text-white-50">
+                                          <i class="fas fa-plus"></i>
+                                        </span>
+            <span class="text">Nouveaux</span>
+        </a>
+
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Routing listing</h6>
             </div>
+
+
+
             <div class="card-body">
                 <div class="table-responsive-sm">
                     <div class="row">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <table class="table table-bordered" id="dataTable" cellspacing="0">
                             <thead>
                             <tr>
                                 <th>Id</th>
@@ -39,20 +49,23 @@
                                     <td>{{ post.id }}</td>
                                     <td>{{ post.name }}</td>
                                     <td><span title="{{ post.slug  }}">{{ post.slug }}</span></td>
-
                                     <td>{{ SelfCut(post.content , 0 ,30)  }}</td>
                                     <td>{{ post.create_at|date("m/d/Y") }} <br> {{ post.create_at|date("H:i:s") }}</td>
                                     <td>{{ post.update_at|date("m/d/Y") }} <br> {{ post.update_at|date("H:i:s") }}</td>
-                                    <td>
-                                        <a href="{{ generateUri('posts.show', {slug: post.slug, id: post.id}) }}" class="mr-1">
-                                            <i class="fas fa-expand-arrows-alt text-success"></i>
-                                        </a>
-                                        <a href="{{ generateUri('admin.posts.edit', {id: post.id}) }}">
-                                            <i class="fas fa-pen text-warning"></i>
-                                        </a>
-                                        <a href="{{ generateUri('admin.posts', {}, {'delete' : post.slug ~ '-' ~ post.id}) }}">
-                                            <i class="fas fa-trash-alt text-danger"></i>
-                                        </a>
+                                    <td class="d-flex align-items-stretch align-self-center">
+                                        <div >
+                                            <a href="{{ generateUri('posts.show', {slug: post.slug, id: post.id}) }}" class=" mr-auto btn btn-success btn-circle btn-sm mt-1" >
+                                                <i class="fas fa-expand-arrows-alt"></i>
+                                            </a>
+
+                                            <a href="{{ generateUri('admin.posts.edit', {id: post.id}) }}" class="mr-auto btn btn-warning btn-circle btn-sm mt-1">
+                                                <i class="fas fa-pen"></i>
+                                            </a>
+
+                                            <a href="{{ generateUri('admin.posts', {}, {'delete' : post.slug ~ '-' ~ post.id}) }}" class="mr-auto btn btn-danger btn-circle btn-sm mt-1">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             {% endfor %}

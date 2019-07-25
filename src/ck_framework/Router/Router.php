@@ -41,6 +41,20 @@ class Router
     }
 
     /**
+     * @param string $path
+     * @param string|callable $callable
+     * @param string $name
+     */
+    public function post(string $path, $callable, string $name)
+    {
+        $methods = 'POST';
+        $NewRoute = new ZendRoute($path, new MiddlewareApp($callable), [$methods], $name);
+        $this->router->addRoute($NewRoute);
+
+        $this->RouteList[] = ['path' => $path, 'middleware' => $callable, 'methods' => $methods, 'name' => $name];
+    }
+
+    /**
      * @param ServerRequestInterface $request
      * @return Route|null
      */

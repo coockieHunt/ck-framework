@@ -46,9 +46,11 @@ class ModuleFunction
      * @param string $uri
      * @param array $function
      * @param string $name
+     * @param string $method
      * @param bool $use_prefix
+     * @throws Exception
      */
-    protected function AddRoute(string $uri, array $function, string $name, bool $use_prefix = true){
+    protected function AddRoute(string $uri, array $function, $name = null, string $method = 'GET', bool $use_prefix = true){
         $namespace = explode('\\', get_class($this));
         $prefix = null;
 
@@ -60,11 +62,26 @@ class ModuleFunction
             }
         }
 
-        $this->router->get(
-            $prefix . $uri,
-            [$function[0], $function[1]],
-            $name
-        );
+        switch ($method) {
+            case 'GET':
+                $this->router->get(
+                    $prefix . $uri,
+                    [$function[0], $function[1]],
+                    $name
+                );
+                break;
+            case 'POST':
+                $this->router->post(
+                    $prefix . $uri,
+                    [$function[0], $function[1]],
+                    $name
+                );
+                break;
+            default:
+                throw new Exception('method not found');
+                break;
+        }
+
     }
 
     /**

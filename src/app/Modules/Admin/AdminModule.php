@@ -45,7 +45,7 @@ class AdminModule extends ModuleFunction
         );
 
         $this->AddRoute(
-            '/routing',
+            '/route',
             [$this, 'routing'],
             'admin.routing'
         );
@@ -74,7 +74,7 @@ class AdminModule extends ModuleFunction
        ]);
     }
 
-    public function routing(){
+    public function routing(Request $request){
         $list = $this->router->getRouteList();
 
         return $this->Render('routing',

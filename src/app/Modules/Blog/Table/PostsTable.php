@@ -81,11 +81,16 @@ class PostsTable
         $request->bindValue(':content', $content, PDO::PARAM_STR);
         $request->bindValue(':slug', $slug, PDO::PARAM_STR);
         $request->bindValue(':id', $id, PDO::PARAM_STR);
-
         $request->execute();
-        $request->setFetchMode(PDO::FETCH_CLASS, PostsEntity::class);
-        $post = $request->fetch();
+    }
 
-        return $post;
+    public function NewPost($name, $content, $slug)
+    {
+        $request = $this->PDO
+            ->prepare('INSERT INTO posts (name, content, slug, create_at, update_at) VALUES (:name , :content, :slug, NOW(), NOW())');
+        $request->bindValue(':name', $name, PDO::PARAM_STR);
+        $request->bindValue(':content', $content, PDO::PARAM_STR);
+        $request->bindValue(':slug', $slug, PDO::PARAM_STR);
+        $request->execute();
     }
 }

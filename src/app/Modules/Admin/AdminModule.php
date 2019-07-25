@@ -156,11 +156,9 @@ class AdminModule extends ModuleFunction
 
             if (!$fail) {
                 $this->postsTable->UpdatePost($RequestId, $body['name'], $body['content'], $body['slug']);
-                return $this->router->redirect('admin.posts.edit',
-                    [
-                        'id' => $RequestId,
-                    ]
-                );
+                return $this->router->redirect('admin.posts');
+            }else{
+                dd($fail);
             }
         }
 
@@ -179,12 +177,17 @@ class AdminModule extends ModuleFunction
             //check if slug exist
             $SlugCheck = $this->postsTable->FindBySlug($body['slug']);
 
+            if ($body['name'] == null){$fail[] = [true, 'name_empty'];}
+            if ($body['slug'] == null){$fail[] = [true, 'slug_empty'];}
+            if ($body['content'] == null){$fail[] = [true, 'content_empty'];}
+
             if ($SlugCheck != false) {$fail[] = [true, 'slug_already_exists'];}
             if (preg_match('/\s/', $body['slug'])) {$fail[] = [true, 'slug_contains_whitespace'];}
             if (preg_match('/[0-9]+/', $body['slug'])) {$fail[] = [true, 'slug_contains_int'];}
 
             if (!$fail) {
-                return $this->router->redirect('admin.posts.new');
+                $this->postsTable->NewPost($body['name'], $body['content'], $body['slug']);
+                return $this->router->redirect('admin.posts');
             }else{
                 dd($fail);
             }

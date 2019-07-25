@@ -40,12 +40,14 @@
                                 <td>{{ route.name|split('.')[0]  }}</td>
                                 <td>{{ route.middleware[1] }}</td>
                                 <td>
+                                    {% if  route.methods == 'GET' %}
                                     <a href="" class="btn btn-primary btn-icon-split">
                                         <span class="icon text-white-50">
                                           <i class="fas fa-sign-in-alt"></i>
                                         </span>
                                         <span class="text">open</span>
                                     </a>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}

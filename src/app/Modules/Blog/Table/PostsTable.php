@@ -5,6 +5,7 @@ namespace app\Modules\Blog\Table;
 
 
 use app\Modules\Blog\Entity\PostsEntity;
+use DateTime;
 use PDO;
 
 class PostsTable
@@ -71,5 +72,20 @@ class PostsTable
             ->query('SELECT COUNT(*) FROM posts')
             ->fetch();
         return $posts;
+    }
+
+    public function UpdatePost(int $id, string $name, string $content, string $slug){
+        $request = $this->PDO
+            ->prepare('UPDATE posts SET name = :name, content = :content, slug = :slug, update_at = NOW() WHERE posts.id = :id');
+        $request->bindValue(':name', $name, PDO::PARAM_STR);
+        $request->bindValue(':content', $content, PDO::PARAM_STR);
+        $request->bindValue(':slug', $slug, PDO::PARAM_STR);
+        $request->bindValue(':id', $id, PDO::PARAM_STR);
+
+        $request->execute();
+        $request->setFetchMode(PDO::FETCH_CLASS, PostsEntity::class);
+        $post = $request->fetch();
+
+        return $post;
     }
 }

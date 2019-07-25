@@ -9,6 +9,7 @@ use app\Modules\Blog\Table\PostsTable;
 use ck_framework\Pagination\Pagination;
 use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
+use Exception;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -32,10 +33,12 @@ class AdminModule extends ModuleFunction
      *          '/world', {uri}
      *          'index', {function name}
      *          'blog.index' {route name}
+     *          'POST' (method request !GET default
      *          'true' [use module prefix !true default}
      *      );
      *
      * @return void
+     * @throws Exception
      */
     public function ListRoute(): void {
         $this->AddRoute(
@@ -57,9 +60,16 @@ class AdminModule extends ModuleFunction
         );
 
         $this->AddRoute(
-            '/posts/edit/{slug:[a-z\-0-9]+}-{id:[0-9]+}',
+            '/posts/edit/{id:[0-9]+}',
             [$this, 'postEdit'],
             'admin.posts.edit'
+        );
+
+        $this->AddRoute(
+            '/posts/edit/{id:[0-9]+}',
+            [$this, 'postEdit'],
+            'admin.posts.edit.post',
+            'POST'
         );
     }
 
@@ -112,12 +122,34 @@ class AdminModule extends ModuleFunction
 
     public function postEdit(Request $request){
         //get uri Attribute
-        $RequestSlug = $request->getAttribute('slug');
         $RequestId = $request->getAttribute('id');
 
-        //try get article
-        $post = $this->postsTable->FindBySlug($RequestSlug);
-        if (empty($post)){$post = $this->postsTable->FindById($RequestId);}
+        //get article
+        $post = $this->postsTable->FindById($RequestId);
+
+        if ($post == false){return $this->router->redirect('admin.index');}
+
+        if ($request->getMethod() == 'POST'){
+            $fail = false;
+
+            $body = $request->getParsedBody();
+
+            //check if slug exist
+            $SlugCheck = $this->postsTable->FindBySlug($body['slug']);
+
+            if ($SlugCheck != false && $SlugCheck->id != $RequestId) {$fail[] = [true, 'slug_already_exists'];}
+            if (preg_match('/\s/', $body['slug'])) {$fail[] = [true, 'slug_contains_whitespace'];}
+            if (preg_match('/[0-9]+/', $body['slug'])) {$fail[] = [true, 'slug_contains_int'];}
+
+            if (!$fail) {
+                $this->postsTable->UpdatePost($RequestId, $body['name'], $body['content'], $body['slug']);
+                return $this->router->redirect('admin.posts.edit',
+                    [
+                        'id' => $RequestId,
+                    ]
+                );
+            }
+        }
 
         return $this->Render('postEdit',
             [

@@ -36,6 +36,7 @@ class HomeModule extends ModuleFunction
      *      );
      *
      * @return void
+     * @throws Exception
      */
     public function ListRoute(): void {
         $this->AddRoute(

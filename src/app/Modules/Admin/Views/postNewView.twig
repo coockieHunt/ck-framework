@@ -1,0 +1,71 @@
+{% extends 'Template/DashboardTemplateView.twig' %}
+
+{% block title %}
+    {{ "new post"|title }}
+{% endblock %}
+
+{% set ipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent maximus, mauris quis placerat lacinia, lectus nulla molestie metus, vel condimentum enim nisi et tortor. Suspendisse bibendum facilisis tellus at elementum. Quisque vel orci lectus. Vivamus nunc massa, placerat in vulputate ac, consequat vitae sem. Pellentesque iaculis iaculis justo, sed dapibus sem aliquet nec. Vivamus facilisis, nisi scelerisque pretium vestibulum, dui urna iaculis nisi, et placerat lacus odio vel arcu. Nam laoreet velit quis eros faucibus, nec elementum enim tempor. Nunc sed gravida nulla. Cras eget mauris in metus laoreet feugiat. Maecenas laoreet, orci lobortis feugiat egestas, metus ante dictum sapien, in sollicitudin tortor mi nec sem. Pellentesque suscipit, lorem nec commodo imperdiet, massa tortor feugiat lorem, id consequat lacus lorem eu dolor. Sed tellus eros, condimentum ut semper a, maximus sit amet dolor. Aliquam vitae libero id nunc pulvinar luctus. Nullam consectetur nibh ante, ut tempus lacus convallis vel. Nulla sodales facilisis volutpat." %}
+
+{% block body %}
+    <div class="content-fluid">
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Information :</h1>
+        <p class="mb-4">This form aims to add an article, in the blog, viewer <a target="_blank" href="">this pages</a>.</p>
+        <form action="{{ generateUri('admin.posts.new')}}" method="post">
+            <div class="form-group">
+                <label for="exampleFormControlInput1">Name</label>
+                <input
+                        type="text"
+                        name="name"
+                        class="form-control"
+                        id="exampleFormControlInput1"
+                        placeholder="This is an post title"
+                >
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlInput1">slug</label>
+                <input
+                        type="text"
+                        name="slug"
+                        class="form-control"
+                        id="exampleFormControlInput1"
+                        placeholder="this-is-an-article-slug"
+                >
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">Content</label>
+                <textarea
+                        class="form-control"
+                        name="content"
+                        id="exampleFormControlTextarea1"
+                        rows="10"
+                        content=""
+                        placeholder="{{ ipsum }}"></textarea>
+            </div>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                Confirm
+            </button>
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Confirmation of change</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to change the content of this article the changes will be irreversible ?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">no</button>
+                            <button type="submit" class="btn btn-primary">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+{% endblock %}

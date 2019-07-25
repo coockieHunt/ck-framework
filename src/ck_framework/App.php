@@ -45,17 +45,27 @@ class App
      */
     public function run(ServerRequestInterface $request): ResponseInterface
     {
+        //get all necessary var
         $uri = $request->getUri()->getPath();
+        $router = $this->container->get(Router::class);
+        $homeUri = $this->container->get('home.route');
+
+        //redirect uri at home route
+        if (empty($uri) || $uri === "/"){
+            $uri = $router->generateUri($homeUri);
+            return (new Response())
+                ->withStatus(301)
+                ->withHeader('Location', $uri);
+        }
 
         //if uri end / redirect uri - /
-        if (!empty($uri) && $uri[-1] === "/") {
+        if(!empty($uri) && $uri[-1] === "/") {
             return (new Response())
                 ->withStatus(301)
                 ->withHeader('Location', substr($uri, 0, -1));
         }
 
         //check if current uri is match route register
-        $router = $this->container->get(Router::class);
         $route = $router->match($request);
 
         //if route not matched

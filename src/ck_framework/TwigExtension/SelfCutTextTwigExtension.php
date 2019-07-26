@@ -29,27 +29,4 @@ class SelfCutTextTwigExtension extends AbstractExtension
         $str = mb_substr( $string, $start_char, $length - strlen( $end ) + 1, 'UTF-8');
         return substr( $str, 0, strrpos( $str,' ') ). ' ' .$end;
     }
-
-    /**
-     * return self cut end string
-     * @param string $string
-     * @param int $start_char
-     * @param int $_cut_count
-     * @return string
-     */
-    public function SelfWrappingString(string $string, int $start_char, int $_cut_count){
-        $stringCount = strlen($string);
-
-        $number = ceil($stringCount / $_cut_count);
-        $cut = [];
-        for ($i = 1; $i <= $stringCount - 1; $i++) {
-            $c = 0;
-            dump($i);
-
-            $c++;
-        }
-        $string = substr($string, $start_char, $_cut_count);
-        dump($string);
-        return $string;
-    }
 }

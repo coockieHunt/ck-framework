@@ -48,7 +48,7 @@
                                 <tr>
                                     <td>{{ post.id }}</td>
                                     <td>{{ post.name }}</td>
-                                    <td><span title="{{ post.slug  }}">{{ post.slug }}</span></td>
+                                    <td>{{ post.slug }}</td>
                                     <td>{{ SelfCut(post.content , 0 ,30)  }}</td>
                                     <td>{{ post.create_at|date("m/d/Y") }} <br> {{ post.create_at|date("H:i:s") }}</td>
                                     <td>{{ post.update_at|date("m/d/Y") }} <br> {{ post.update_at|date("H:i:s") }}</td>

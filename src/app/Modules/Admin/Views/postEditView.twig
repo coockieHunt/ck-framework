@@ -11,6 +11,9 @@
     <!-- Page Heading -->
     <h1 class="h3 mb-2 text-gray-800">Information :</h1>
     <p class="mb-4">This form is intended to modify a specific article. if you want to add some, viewer <a target="_blank" href="">this pages</a>.</p>
+
+    {{ alert() }}
+
     <form action="{{ generateUri('admin.posts.edit.post', {id: post.id}) }}" method="post">
         <div class="form-group">
             <label for="exampleFormControlInput1">Name</label>
@@ -68,7 +71,6 @@
                 </div>
             </div>
         </div>
-
 
     </form>
 </div>

@@ -27,6 +27,5 @@ class BootStrapTemplate
             'element' => '<li class="page-item  ' . $CustomElementClass . '"><a class="page-link" :custom </a></li>'
         ];
     }
-
 }
 

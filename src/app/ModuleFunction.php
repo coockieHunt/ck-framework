@@ -16,15 +16,15 @@ class ModuleFunction
     /**
      * @var Router
      */
-    protected $router;
+    public $router;
     /**
      * @var RendererInterface
      */
-    protected $renderer;
+    public $renderer;
     /**
      * @var ContainerInterface
      */
-    protected $container;
+    public $container;
 
     /**
      * @param Router $router
@@ -39,49 +39,6 @@ class ModuleFunction
         $this->container = $container;
 
         $this->AddViewFolder($directory);
-    }
-
-    /**
-     * Add route add prefix if use_prefix is true (default)
-     * @param string $uri
-     * @param array $function
-     * @param string $name
-     * @param string $method
-     * @param bool $use_prefix
-     * @throws Exception
-     */
-    protected function AddRoute(string $uri, array $function, $name = null, string $method = 'GET', bool $use_prefix = true){
-        $namespace = explode('\\', get_class($this));
-        $prefix = null;
-
-        if ($uri == "/"){$uri = "";};
-        if ($use_prefix){
-            $key =  strtolower($namespace[2] . '.prefix');
-            if ($this->container->has($key)){
-                $prefix = "/" . $this->container->get($key) ;
-            }
-        }
-
-        switch ($method) {
-            case 'GET':
-                $this->router->get(
-                    $prefix . $uri,
-                    [$function[0], $function[1]],
-                    $name
-                );
-                break;
-            case 'POST':
-                $this->router->post(
-                    $prefix . $uri,
-                    [$function[0], $function[1]],
-                    $name
-                );
-                break;
-            default:
-                throw new Exception('method not found');
-                break;
-        }
-
     }
 
     /**
@@ -106,13 +63,13 @@ class ModuleFunction
      */
     private function AddViewFolder(string $directory){
         $path = $directory . DIRECTORY_SEPARATOR . 'Views';
-        if (file_exists ( $path )){
+        if (file_exists( $path)){
             $this->getRenderer()->addPath(
                 $path,
                 $this->GetClassName()
             );
         }else{
-            throw new Exception("View folder do not exist in : " . $this->GetClassName());
+            throw new Exception("View folder do not exist in : '" . $path . "'");
         }
 
     }
@@ -134,5 +91,42 @@ class ModuleFunction
     public function getRenderer(): RendererInterface
     {
         return $this->renderer;
+    }
+
+    public function AddRoute(string $uri, array $function, $name = null, string $method = 'GET', bool $use_prefix = true){
+        $namespace = explode('\\', get_class($this));
+        $prefix = null;
+
+        if ($uri == "/"){$uri = "";};
+        if ($use_prefix){
+            $key =  strtolower($namespace[2] . '.prefix');
+            if ($this->container->has($key)){
+                $prefix = "/" . $this->container->get($key) ;
+            }
+        }
+
+        $class = $this->container->get($function[0]);
+        $function = $function[1];
+
+        switch ($method) {
+            case 'GET':
+                $this->router->get(
+                    $prefix . $uri,
+                    //$class->$function(),
+                    [$class, $function],
+                    $name
+                );
+                break;
+            case 'POST':
+                $this->router->post(
+                    $prefix . $uri,
+                    [$class, $function],
+                    $name
+                );
+                break;
+            default:
+                throw new Exception('method not found');
+                break;
+        }
     }
 }

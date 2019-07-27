@@ -5,6 +5,7 @@ namespace app\Modules\Home;
 
 
 use app\ModuleFunction;
+use app\Modules\Home\Actions\HomeActions;
 use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
 use Exception;
@@ -22,7 +23,7 @@ class HomeModule extends ModuleFunction
      * @throws Exception
      */
     public function __construct(Router $router, RendererInterface  $renderer, ContainerInterface $container){
-        parent::init($router, $renderer, $container, __DIR__);
+        parent::init($router, $renderer, $container,  __DIR__);
     }
 
     /**
@@ -41,14 +42,8 @@ class HomeModule extends ModuleFunction
     public function ListRoute(): void {
         $this->AddRoute(
             '/',
-            [$this, 'index'],
+            [HomeActions::class, 'index'],
             'home.index'
         );
-    }
-
-    public function index(): string
-    {
-
-        return $this->Render("index");
     }
 }

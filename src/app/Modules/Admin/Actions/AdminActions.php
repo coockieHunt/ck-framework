@@ -19,17 +19,12 @@ class AdminActions extends ModuleFunction
      * @var PostsTable
      */
     private $postsTable;
-    /**
-     * @var Flash
-     */
-    private $flash;
 
     public function __construct(Router $router, RendererInterface  $renderer, ContainerInterface $container , PostsTable $postsTable)
     {
         $dir = substr(__DIR__, 0, strrpos(__DIR__, DIRECTORY_SEPARATOR));
         parent::init($router, $renderer, $container,  $dir);
         $this->postsTable = $postsTable;
-        $this->flash = new Flash('session');
     }
 
     public function index(){
@@ -89,13 +84,12 @@ class AdminActions extends ModuleFunction
         if ($post == false){return $this->router->redirect('admin.index');}
 
         if ($request->getMethod() == 'POST'){
-            $fail = [];
-
             $body = $request->getParsedBody();
 
             //check if slug exist
             $SlugCheck = $this->postsTable->FindBySlug($body['slug']);
 
+            $fail = [];
             if ($SlugCheck != false && $SlugCheck->id != $RequestId) {$fail[] = ['this slug and already used'];}
             if (preg_match('/\s/', $body['slug'])) {$fail[] = ['the slug must not contain whitespace'];}
             if (preg_match('/[0-9]+/', $body['slug'])) {$fail[] = ['the slug must not contain a number'];}
@@ -105,12 +99,10 @@ class AdminActions extends ModuleFunction
 
             if (empty($fail)) {
                 $this->postsTable->UpdatePost($RequestId, $body['name'], $body['content'], $body['slug']);
-                $this->flash->add(1, 'alert-success', 'Post has been modified ');
                 return $this->router->redirect('admin.posts');
             }else{
                 $errorList = '';
                 foreach ($fail as $element){$errorList =  $errorList . '    - ' . $element[0] . '<br>';}
-                $this->flash->add(1, 'alert-warning', 'invalid form :  <br>' . $errorList);
             }
         }
 

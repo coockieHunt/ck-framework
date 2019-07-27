@@ -19,7 +19,6 @@ class AdminModule extends ModuleFunction
 {
     CONST DEFINITIONS = __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
 
-
     public function __construct(Router $router, RendererInterface  $renderer, ContainerInterface $container, PostsTable $postsTable){
         parent::init($router, $renderer, $container, __DIR__);
     }

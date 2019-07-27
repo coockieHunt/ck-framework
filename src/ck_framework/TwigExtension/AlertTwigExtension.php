@@ -10,6 +10,20 @@ use Twig\TwigFunction;
 
 class AlertTwigExtension extends AbstractExtension
 {
+    /**
+     * @var Flash
+     */
+    private $flash;
+
+    /**
+     * AlertTwigExtension constructor.
+     * @param Flash $flash
+     */
+    public function __construct(Flash $flash)
+    {
+        $this->flash = $flash;
+    }
+
     public function getFunctions(): array
     {
         return [
@@ -19,13 +33,6 @@ class AlertTwigExtension extends AbstractExtension
 
     public function AlertPush(?int $id = null): void
     {
-        $flash = new Flash('session');
-        if ($id != null){
-            echo $flash->push($id);
-        }else{
-            $array = $flash->push();
-            foreach ($array as $element){
-                echo $element;}
-        }
+
     }
 }

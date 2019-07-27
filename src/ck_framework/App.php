@@ -29,6 +29,8 @@ class App
      */
     public function __construct(ContainerInterface $container, array $modules = [])
     {
+        if(session_id() == '' || !isset($_SESSION)) {session_start();}
+
         $this->container = $container;
         foreach ($modules as $module) {
             $module = $container->get($module);

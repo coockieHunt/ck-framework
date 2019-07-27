@@ -17,4 +17,23 @@ class SnippetUtils
             return false;
         }
     }
+
+
+    /**
+     * check if string contain specific char
+     * @param string $catch
+     * @param string $char
+     * @return bool
+     */
+    static function IfStringContains(string $catch, string $char){
+        if (strpos($char, $catch) !== false) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    static function GetTextAfterChar(string $catch, string $char){
+        return substr($char, strpos($char, $catch) +1 );
+    }
 }

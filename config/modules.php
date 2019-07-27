@@ -16,6 +16,5 @@ use app\Modules\Home\HomeModule;
 $modules = [
     HomeModule::class,
     BlogModule::class,
-    FileModule::class,
     AdminModule::class,
 ];

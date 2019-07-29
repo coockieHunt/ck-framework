@@ -43,7 +43,7 @@
                             </thead>
                             <tbody>
 
-                            {% for post in posts %}
+                                {% for post in posts %}
                                 <tr>
                                     <td>{{ post.id }}</td>
                                     <td>{{ post.name }}</td>
@@ -53,23 +53,28 @@
                                     <td>{{ post.update_at|date("m/d/Y") }} <br> {{ post.update_at|date("H:i:s") }}</td>
                                     <td class="d-flex align-items-stretch align-self-center">
                                         <div >
-                                            <a href="{{ generateUri('posts.show', {slug: post.slug, id: post.id}) }}" class=" mr-auto btn btn-success btn-circle btn-sm mt-1" >
+                                            <a href="{{ generateUri('posts.show', {slug: post.slug, id: post.id}) }}"
+                                                    class=" mr-auto btn btn-success btn-circle btn-sm mt-1">
                                                 <i class="fas fa-expand-arrows-alt"></i>
                                             </a>
 
-                                            <a href="{{ generateUri('admin.posts.edit', {id: post.id}) }}" class="mr-auto btn btn-warning btn-circle btn-sm mt-1">
+                                            <a href="{{ generateUri('admin.posts.edit', {id: post.id}) }}"
+                                                    class="mr-auto btn btn-warning btn-circle btn-sm mt-1">
                                                 <i class="fas fa-pen"></i>
                                             </a>
 
-                                            <a href="{{ generateUri('admin.posts', {}, {'delete' : post.slug ~ '-' ~ post.id}) }}" class="mr-auto btn btn-danger btn-circle btn-sm mt-1">
+                                            <a href="{{ generateUri('admin.posts.delete', {id: post.id}) }}"
+                                                    class="mr-auto btn btn-danger btn-circle btn-sm mt-1">
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
                                         </div>
                                     </td>
                                 </tr>
-                            {% endfor %}
+                                {% endfor %}
+                            <tbody>
                         </table>
                     </div>
+
                     <div class="row">
                       <div class="col-sm-12 col-md-8">
                           {{ dataPagination.CurrentStep }} / {{ dataPagination.GetMaxUserStep }}

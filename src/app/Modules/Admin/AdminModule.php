@@ -6,14 +6,12 @@ namespace app\Modules\Admin;
 
 use app\ModuleFunction;
 use app\Modules\Admin\Actions\AdminActions;
+use app\Modules\Admin\Actions\AdminPostActions;
 use app\Modules\Blog\Table\PostsTable;
-use ck_framework\Flash\Flash;
-use ck_framework\Pagination\Pagination;
 use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
-use Exception;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Exception;
 
 class AdminModule extends ModuleFunction
 {
@@ -52,32 +50,32 @@ class AdminModule extends ModuleFunction
 
         $this->AddRoute(
             '/posts',
-            [AdminActions::class, 'posts'],
+            [AdminPostActions::class, 'posts'],
             'admin.posts'
         );
 
         $this->AddRoute(
             '/posts/edit/{id:[0-9]+}',
-            [AdminActions::class, 'postEdit'],
+            [AdminPostActions::class, 'postEdit'],
             'admin.posts.edit'
         );
 
         $this->AddRoute(
             '/posts/new',
-            [AdminActions::class, 'postNew'],
+            [AdminPostActions::class, 'postNew'],
             'admin.posts.new'
         );
 
         $this->AddRoute(
             '/posts/new',
-            [AdminActions::class, 'postNew'],
+            [AdminPostActions::class, 'postNew'],
             'admin.posts.new.post',
             'POST'
         );
 
         $this->AddRoute(
             '/posts/edit/{id:[0-9]+}',
-            [AdminActions::class, 'postEdit'],
+            [AdminPostActions::class, 'postEdit'],
             'admin.posts.edit.post',
             'POST'
         );

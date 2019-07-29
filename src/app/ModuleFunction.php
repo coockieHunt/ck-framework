@@ -6,8 +6,8 @@ namespace app;
 
 use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
-use Exception;
 use Psr\Container\ContainerInterface;
+use Exception;
 
 class ModuleFunction
 {
@@ -96,7 +96,6 @@ class ModuleFunction
     public function AddRoute(string $uri, array $function, $name = null, string $method = 'GET', bool $use_prefix = true){
         $namespace = explode('\\', get_class($this));
         $prefix = null;
-
         if ($uri == "/"){$uri = "";};
         if ($use_prefix){
             $key =  strtolower($namespace[2] . '.prefix');
@@ -106,6 +105,7 @@ class ModuleFunction
         }
 
         $class = $this->container->get($function[0]);
+
         $function = $function[1];
 
         switch ($method) {

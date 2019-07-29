@@ -41,16 +41,17 @@ class AdminPostActions extends ModuleFunction
      * @return mixed|ResponseInterface
      */
     public function posts(){
+
         //setup pagination
         $redirect = 'admin.posts';
         if (!isset($_GET['p'])) {$current = 1;} else {$current = (int)$_GET['p'];}
         $postsCount = $this->postsTable->CountAll();
         $Pagination = new Pagination(10, 9, $postsCount[0], $redirect);
         $Pagination->setCurrentStep($current);
-        if (empty($posts)){return $this->router->redirect($redirect, [], ['p' => 1]);}
 
-        //get post list
         $posts = $this->postsTable->FindResultLimit($Pagination->GetLimit(), $Pagination->getDbElementDisplay());
+
+        if (empty($posts)){return $this->router->redirect($redirect, [], ['p' => 1]);}
 
         //render view
         return $this->Render('posts', ['posts' => $posts, 'dataPagination' => $Pagination]);

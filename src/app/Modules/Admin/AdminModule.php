@@ -15,6 +15,8 @@ use Exception;
 
 class AdminModule extends ModuleFunction
 {
+    CONST SEEDS = __DIR__ . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'seeds';
+    CONST MIGRATIONS = __DIR__ . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'migrations';
     CONST DEFINITIONS = __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
 
     public function __construct(Router $router, RendererInterface  $renderer, ContainerInterface $container, PostsTable $postsTable){
@@ -36,18 +38,28 @@ class AdminModule extends ModuleFunction
      * @throws Exception
      */
     public function ListRoute(): void {
+
+        /***
+         * MAIN ROUTE
+         */
         $this->AddRoute(
             '/',
             [AdminActions::class, 'index'],
             'admin.index'
         );
 
+        /***
+         * ROUTER ROUTE
+         */
         $this->AddRoute(
             '/route',
             [AdminActions::class, 'routing'],
             'admin.routing'
         );
 
+        /***
+         * POST ROUTE
+         */
         $this->AddRoute(
             '/posts',
             [AdminPostActions::class, 'posts'],
@@ -78,6 +90,20 @@ class AdminModule extends ModuleFunction
             [AdminPostActions::class, 'postEdit'],
             'admin.posts.edit.post',
             'POST'
+        );
+
+        $this->AddRoute(
+            '/post/delete/{id:[0-9]+}',
+            [AdminPostActions::class, 'postDelete'],
+            'admin.posts.delete'
+        );
+
+        $this->AddRoute(
+            '/post/delete/{id:[0-9]+}',
+            [AdminPostActions::class, 'postDelete'],
+            'admin.posts.delete.post',
+            'POST'
+
         );
     }
 }

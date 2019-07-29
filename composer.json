@@ -23,7 +23,8 @@
     "zendframework/zend-expressive-fastroute": "3.0.3",
     "twig/twig": "3.x-dev",
     "php-di/php-di": "6.0.9",
-    "psr/http-server-middleware": "1.0.1"
+    "psr/http-server-middleware": "1.0.1",
+    "robmorgan/phinx": "^0.10.8"
   },
 
   "require-dev": {

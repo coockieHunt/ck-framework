@@ -1,0 +1,27 @@
+{% extends 'Template/DashboardTemplateView.twig' %}
+
+{% block title %}
+    {{ "post delete"|title }}
+{% endblock %}
+
+{% block body %}
+    <div class="content-fluid">
+        <h2>Are you sure you want to delete the article : </h2>
+
+        article name :
+        <p><strong>{{ post.name }}</strong></p>
+
+        article slug :
+        <p><strong>{{ post.slug }}</strong></p>
+
+        article content :
+        <p><strong>{{ post.content }}</strong></p>
+
+        <a href="{{ generateUri('admin.posts.delete.post', {id: post.id}) }}" class="btn btn-danger btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </span>
+            <span class="text">Delete</span>
+        </a>
+    </div>
+{% endblock %}

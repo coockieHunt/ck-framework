@@ -12,6 +12,8 @@ use Exception;
 class ModuleFunction
 {
     CONST DEFINITIONS = NULL;
+    CONST MIGRATIONS = NULL;
+    CONST SEEDS = NULL;
 
     /**
      * @var Router

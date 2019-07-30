@@ -48,6 +48,7 @@ class Pagination
     }
 
     public function GetMaxUserStep(){
+        dd($this->DbElementDisplay);
         return $this->DbElementDisplay + 1;
     }
 

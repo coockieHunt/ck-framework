@@ -17,7 +17,7 @@
         article content :
         <p><strong>{{ post.content }}</strong></p>
 
-        <a href="{{ generateUri('admin.posts.delete.post', {id: post.id}) }}" class="btn btn-danger btn-icon-split">
+        <a href="{{ generateUri('admin.posts.delete', {id: post.id}, {'confirm': 'ok'}) }}" class="btn btn-danger btn-icon-split">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-trash-alt"></i>
                                         </span>

@@ -10,9 +10,11 @@ use ck_framework\Pagination\Pagination;
 use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
 use Exception;
+use PDO;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use function DI\factory;
 
 class AdminPostActions extends ModuleFunction
 {
@@ -51,10 +53,8 @@ class AdminPostActions extends ModuleFunction
 
         $posts = $this->postsTable->FindResultLimit($Pagination->GetLimit(), $Pagination->getDbElementDisplay());
 
-        if (empty($posts)){return $this->router->redirect($redirect, [], ['p' => 1]);}
-
         //render view
-        return $this->Render('posts', ['posts' => $posts, 'dataPagination' => $Pagination]);
+        return $this->Render('post\posts', ['posts' => $posts, 'dataPagination' => $Pagination]);
     }
 
     /**
@@ -94,7 +94,7 @@ class AdminPostActions extends ModuleFunction
             }
         }
 
-        return $this->Render('postEdit', ['post' => $post,]);
+        return $this->Render('post\postEdit', ['post' => $post,]);
     }
 
     /**
@@ -128,7 +128,7 @@ class AdminPostActions extends ModuleFunction
             }
         }
 
-        return $this->Render('postNew');
+        return $this->Render('post\postNew');
     }
 
     /**
@@ -137,6 +137,17 @@ class AdminPostActions extends ModuleFunction
      * @return mixed|ResponseInterface
      */
     public function postDelete(Request $request){
-        return 'delete';
+        //get uri Attribute
+        $RequestId = $request->getAttribute('id');
+        //get article
+        $post = $this->postsTable->FindById($RequestId);
+        if ($post == false){return $this->router->redirect('admin.index');}
+
+        if (isset($_GET['confirm'])){
+            $this->postsTable->DeleteById($RequestId);
+            return $this->router->redirect('admin.posts');
+        }
+
+        return $this->Render('post\postDelete', ['post' => $post ]);
     }
 }

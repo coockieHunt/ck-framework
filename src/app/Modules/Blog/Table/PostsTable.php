@@ -93,4 +93,12 @@ class PostsTable
         $request->bindValue(':slug', $slug, PDO::PARAM_STR);
         $request->execute();
     }
+
+    public function DeleteById($id)
+    {
+        $request = $this->PDO
+            ->prepare('DELETE FROM posts WHERE posts.id = :id ');
+        $request->bindValue(':id', $id, PDO::PARAM_STR);
+        $request->execute();
+    }
 }

@@ -15,9 +15,10 @@ use Exception;
 
 class AdminModule extends ModuleFunction
 {
-    CONST SEEDS = __DIR__ . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'seeds';
-    CONST MIGRATIONS = __DIR__ . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'migrations';
     CONST DEFINITIONS = __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
+    CONST MIGRATIONS = __DIR__ . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'migrations';
+    CONST SEEDS =  __DIR__ . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'seeds';
+
 
     public function __construct(Router $router, RendererInterface  $renderer, ContainerInterface $container, PostsTable $postsTable){
         parent::init($router, $renderer, $container, __DIR__);
@@ -61,32 +62,32 @@ class AdminModule extends ModuleFunction
          * POST ROUTE
          */
         $this->AddRoute(
-            '/posts',
+            '/post',
             [AdminPostActions::class, 'posts'],
             'admin.posts'
         );
 
         $this->AddRoute(
-            '/posts/edit/{id:[0-9]+}',
+            '/post/edit/{id:[0-9]+}',
             [AdminPostActions::class, 'postEdit'],
             'admin.posts.edit'
         );
 
         $this->AddRoute(
-            '/posts/new',
+            '/post/new',
             [AdminPostActions::class, 'postNew'],
             'admin.posts.new'
         );
 
         $this->AddRoute(
-            '/posts/new',
+            '/post/new',
             [AdminPostActions::class, 'postNew'],
             'admin.posts.new.post',
             'POST'
         );
 
         $this->AddRoute(
-            '/posts/edit/{id:[0-9]+}',
+            '/post/edit/{id:[0-9]+}',
             [AdminPostActions::class, 'postEdit'],
             'admin.posts.edit.post',
             'POST'
@@ -96,14 +97,6 @@ class AdminModule extends ModuleFunction
             '/post/delete/{id:[0-9]+}',
             [AdminPostActions::class, 'postDelete'],
             'admin.posts.delete'
-        );
-
-        $this->AddRoute(
-            '/post/delete/{id:[0-9]+}',
-            [AdminPostActions::class, 'postDelete'],
-            'admin.posts.delete.post',
-            'POST'
-
         );
     }
 }

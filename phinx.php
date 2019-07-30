@@ -1,33 +1,31 @@
 <?php
-require 'public/index.php';
+require 'public'. DIRECTORY_SEPARATOR .'index.php';
 
 $migrations = [];
 $seeds = [];
 foreach ($modules as $module) {
-    if ($module::MIGRATIONS  != null) {
+    if ($module::MIGRATIONS) {
         $migrations[] = $module::MIGRATIONS;
     }
-
-    if ($module::SEEDS  != null) {
+    if ($module::SEEDS) {
         $seeds[] = $module::SEEDS;
     }
 }
 
 return [
-    'paths' => [
+    'paths'        => [
         'migrations' => $migrations,
-        'seeds' => $seeds
+        'seeds'      => $seeds
     ],
-
     'environments' => [
-        'development' => [
-            'adapter' => $container->get('database.adapter'),
-            'host' => $container->get('database.host'),
-            'name' => $container->get('database.name'),
-            'user' => $container->get('database.user'),
-            'pass' => $container->get('database.pass'),
-            'collation' => 'utf8_unicode_ci',
+        'default_database' => 'development',
+        'development'      => [
+            'adapter' => 'mysql',
+            'host' => $app->getContainer()->get('database.host'),
+            'name' => $app->getContainer()->get('database.name'),
+            'user' => $app->getContainer()->get('database.user'),
+            'pass' => $app->getContainer()->get('database.pass'),
             'charset' => 'utf8'
         ]
-    ],
+    ]
 ];

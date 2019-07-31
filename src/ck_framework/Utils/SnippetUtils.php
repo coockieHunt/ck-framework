@@ -36,4 +36,9 @@ class SnippetUtils
     static function GetTextAfterChar(string $catch, string $char){
         return substr($char, strpos($char, $catch) +1 );
     }
+
+    static function GetTextBeforeChar(string $catch, string $char){
+        $arr = explode($catch, $char);
+        return $arr[0];
+    }
 }

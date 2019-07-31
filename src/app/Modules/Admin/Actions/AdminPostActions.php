@@ -105,7 +105,8 @@ class AdminPostActions extends ModuleFunction
             }else{
                 $errorList = '';
                 foreach ($fail as $element){
-                    $errorList = $errorList .  '<br>-' . $element;
+                    $errorList = $errorList .
+                        ' <br> - ' . $element;
                 }
                 $this->flash->error('post error :' . $errorList);
             }
@@ -138,9 +139,15 @@ class AdminPostActions extends ModuleFunction
             //process
             if (empty($fail)) {
                 $this->postsTable->NewPost($body['name'], $body['content'], $body['slug']);
+                $this->flash->success('post has been create');
                 return $this->router->redirect('admin.posts');
             }else{
-                dd($fail);
+                $errorList = '';
+                foreach ($fail as $element){
+                    $errorList = $errorList .
+                        ' <br> - ' . $element;
+                }
+                $this->flash->error('post error :' . $errorList);
             }
         }
 
@@ -161,6 +168,7 @@ class AdminPostActions extends ModuleFunction
 
         if (isset($_GET['confirm'])){
             $this->postsTable->DeleteById($RequestId);
+            $this->flash->warning('post has been delete');
             return $this->router->redirect('admin.posts');
         }
 

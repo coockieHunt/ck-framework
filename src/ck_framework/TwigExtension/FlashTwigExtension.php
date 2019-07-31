@@ -28,6 +28,10 @@ class FlashTwigExtension extends AbstractExtension
 
     public function getFlash($type)
     {
-        return $this->flashService->get($type);
+        if ($this->flashService->get($type)){
+            return $this->flashService->get($type);
+        }else{
+            return null;
+        }
     }
 }

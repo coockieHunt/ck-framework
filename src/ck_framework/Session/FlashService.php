@@ -46,6 +46,14 @@ class FlashService
         $this->session->set($this->sessionKey, $flash);
     }
 
+
+    public function warning(string $message)
+    {
+        $flash = $this->session->get($this->sessionKey, []);
+        $flash['warning'] = $message;
+        $this->session->set($this->sessionKey, $flash);
+    }
+
     /**
      * get flash message
      * @param string $type
@@ -62,4 +70,5 @@ class FlashService
         }
         return null;
     }
+
 }

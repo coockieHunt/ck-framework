@@ -288,9 +288,18 @@
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">{% block title %}{% endblock %}</h1>
                 </div>
-                {% block body %}
-                    {# body content here#}
-                {% endblock %}
+                {% if flash('success') %}
+                    <div class="alert alert-success">
+                        {{ flash('success') }}
+                    </div>
+                {% endif %}
+
+                {% if flash('error') %}
+                    <div class="alert alert-danger">
+                        {{ flash('error') }}
+                    </div>
+                {% endif %}
+                    {% block body %}{% endblock %}
 
             </div>
                 <footer class="sticky-footer bg-white">

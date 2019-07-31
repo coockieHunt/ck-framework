@@ -9,12 +9,11 @@ use app\Modules\Blog\Table\PostsTable;
 use ck_framework\Pagination\Pagination;
 use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
+use ck_framework\Session\FlashService;
 use Exception;
-use PDO;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use function DI\factory;
 
 class AdminPostActions extends ModuleFunction
 {
@@ -22,6 +21,10 @@ class AdminPostActions extends ModuleFunction
      * @var PostsTable
      */
     private $postsTable;
+    /**
+     * @var FlashService
+     */
+    private $flash;
 
     /**
      * AdminPostActions constructor.
@@ -29,13 +32,21 @@ class AdminPostActions extends ModuleFunction
      * @param RendererInterface $renderer
      * @param ContainerInterface $container
      * @param PostsTable $postsTable
+     * @param FlashService $flash
      * @throws Exception
      */
-    public function __construct(Router $router, RendererInterface  $renderer, ContainerInterface $container , PostsTable $postsTable)
+    public function __construct(
+        Router $router,
+        RendererInterface  $renderer,
+        ContainerInterface $container ,
+        PostsTable $postsTable,
+        FlashService $flash
+    )
     {
         $dir = substr(__DIR__, 0, strrpos(__DIR__, DIRECTORY_SEPARATOR));
         parent::init($router, $renderer, $container,  $dir);
         $this->postsTable = $postsTable;
+        $this->flash = $flash;
     }
 
     /**
@@ -52,6 +63,7 @@ class AdminPostActions extends ModuleFunction
         $Pagination->setCurrentStep($current);
 
         $posts = $this->postsTable->FindResultLimit($Pagination->GetLimit(), $Pagination->getDbElementDisplay());
+
 
         //render view
         return $this->Render('post\posts', ['posts' => $posts, 'dataPagination' => $Pagination]);
@@ -78,19 +90,24 @@ class AdminPostActions extends ModuleFunction
 
             //check post error
             $fail = [];
-            if ($SlugCheck != false && $SlugCheck->id != $RequestId) {$fail[] = ['this slug and already used'];}
-            if (preg_match('/\s/', $body['slug'])) {$fail[] = ['the slug must not contain whitespace'];}
-            if (preg_match('/[0-9]+/', $body['slug'])) {$fail[] = ['the slug must not contain a number'];}
-            if ($body['name'] == null){$fail[] = ['the name of the post should not be empty'];}
-            if ($body['slug'] == null){$fail[] = ['the slug of the post should not be empty'];}
-            if ($body['content'] == null){$fail[] = ['the content of the post should not be empty'];}
+            if ($SlugCheck != false && $SlugCheck->id != $RequestId) {$fail[] = 'this slug and already used';}
+            if (preg_match('/\s/', $body['slug'])) {$fail[] = 'the slug must not contain whitespace';}
+            if (preg_match('/[0-9]+/', $body['slug'])) {$fail[] = 'the slug must not contain a number';}
+            if ($body['name'] == null){$fail[] = 'the name of the post should not be empty';}
+            if ($body['slug'] == null){$fail[] = 'the slug of the post should not be empty';}
+            if ($body['content'] == null){$fail[] = 'the content of the post should not be empty';}
 
             //process
             if (empty($fail)) {
                 $this->postsTable->UpdatePost($RequestId, $body['name'], $body['content'], $body['slug']);
+                $this->flash->success('post has been update');
                 return $this->router->redirect('admin.posts');
             }else{
-                dd($fail);
+                $errorList = '';
+                foreach ($fail as $element){
+                    $errorList = $errorList .  '<br>-' . $element;
+                }
+                $this->flash->error('post error :' . $errorList);
             }
         }
 
@@ -112,12 +129,11 @@ class AdminPostActions extends ModuleFunction
 
             //check if form contain error
             $fail = [];
-            if ($body['name'] == null){$fail[] = 'name_empty';}
-            if ($body['slug'] == null){$fail[] = 'slug_empty';}
-            if ($body['content'] == null){$fail[] = 'content_empty';}
-            if ($SlugCheck != false) {$fail[] = 'slug_already_exists';}
-            if (preg_match('/\s/', $body['slug'])) {$fail[] = 'slug_contains_whitespace';}
-            if (preg_match('/[0-9]+/', $body['slug'])) {$fail[] = 'slug_contains_int';}
+            if (preg_match('/\s/', $body['slug'])) {$fail[] = ['the slug must not contain whitespace'];}
+            if (preg_match('/[0-9]+/', $body['slug'])) {$fail[] = ['the slug must not contain a number'];}
+            if ($body['name'] == null){$fail[] = ['the name of the post should not be empty'];}
+            if ($body['slug'] == null){$fail[] = ['the slug of the post should not be empty'];}
+            if ($body['content'] == null){$fail[] = ['the content of the post should not be empty'];}
 
             //process
             if (empty($fail)) {

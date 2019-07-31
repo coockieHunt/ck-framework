@@ -1,8 +1,8 @@
 <?php
 
 use ck_framework\Twig\PaginationTwigExtension;
-use ck_framework\TwigExtension\AlertTwigExtension;
 use ck_framework\TwigExtension\AssetTwigExtension;
+use ck_framework\TwigExtension\FlashTwigExtension;
 use ck_framework\TwigExtension\RouterTwigExtension;
 use ck_framework\TwigExtension\SelfCutTextTwigExtension;
 
@@ -38,7 +38,7 @@ $config = [
         AssetTwigExtension::class,
         RouterTwigExtension::class,
         PaginationTwigExtension::class,
-        AlertTwigExtension::class
+        FlashTwigExtension::class
     ]
 ];
 

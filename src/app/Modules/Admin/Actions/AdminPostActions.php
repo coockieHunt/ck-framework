@@ -10,6 +10,7 @@ use ck_framework\Pagination\Pagination;
 use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
 use ck_framework\Session\FlashService;
+use ck_framework\Validator\Validator;
 use Exception;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -64,7 +65,6 @@ class AdminPostActions extends ModuleFunction
 
         $posts = $this->postsTable->FindResultLimit($Pagination->GetLimit(), $Pagination->getDbElementDisplay());
 
-
         //render view
         return $this->Render('post\posts', ['posts' => $posts, 'dataPagination' => $Pagination]);
     }
@@ -73,6 +73,7 @@ class AdminPostActions extends ModuleFunction
      * edit specific post
      * @param Request $request
      * @return mixed|ResponseInterface
+     * @throws Exception
      */
     public function postEdit(Request $request){
         //get uri Attribute
@@ -88,23 +89,24 @@ class AdminPostActions extends ModuleFunction
             $body = $request->getParsedBody();
             $SlugCheck = $this->postsTable->FindBySlug($body['slug']);
 
-            //check post error
-            $fail = [];
-            if ($SlugCheck != false && $SlugCheck->id != $RequestId) {$fail[] = 'this slug and already used';}
-            if (preg_match('/\s/', $body['slug'])) {$fail[] = 'the slug must not contain whitespace';}
-            if (preg_match('/[0-9]+/', $body['slug'])) {$fail[] = 'the slug must not contain a number';}
-            if ($body['name'] == null){$fail[] = 'the name of the post should not be empty';}
-            if ($body['slug'] == null){$fail[] = 'the slug of the post should not be empty';}
-            if ($body['content'] == null){$fail[] = 'the content of the post should not be empty';}
+            /* check form field */
+            $validator = (new Validator($body))
+                ->required('name', 'slug', 'content')
+                ->empty('name', 'slug', 'content')
+                ->isNotSlug('slug');
+
+            if ($SlugCheck != false && $SlugCheck->id != $RequestId) {
+                $validator->CustomError('slug', '"' . $body['slug'] . '" is slug and already used');
+            }
 
             //process
-            if (empty($fail)) {
+            if ($validator->isValid()) {
                 $this->postsTable->UpdatePost($RequestId, $body['name'], $body['content'], $body['slug']);
                 $this->flash->success('post has been update');
                 return $this->router->redirect('admin.posts');
             }else{
                 $errorList = '';
-                foreach ($fail as $element){
+                foreach ($validator->getError() as $element){
                     $errorList = $errorList .
                         ' <br> - ' . $element;
                 }
@@ -119,6 +121,7 @@ class AdminPostActions extends ModuleFunction
      * create new post
      * @param Request $request
      * @return mixed|ResponseInterface
+     * @throws Exception
      */
     public function postNew(Request $request){
         //process add post
@@ -128,22 +131,20 @@ class AdminPostActions extends ModuleFunction
             //check if slug exist
             $SlugCheck = $this->postsTable->FindBySlug($body['slug']);
 
-            //check if form contain error
-            $fail = [];
-            if (preg_match('/\s/', $body['slug'])) {$fail[] = ['the slug must not contain whitespace'];}
-            if (preg_match('/[0-9]+/', $body['slug'])) {$fail[] = ['the slug must not contain a number'];}
-            if ($body['name'] == null){$fail[] = ['the name of the post should not be empty'];}
-            if ($body['slug'] == null){$fail[] = ['the slug of the post should not be empty'];}
-            if ($body['content'] == null){$fail[] = ['the content of the post should not be empty'];}
+            /* check form field */
+            $validator = (new Validator($body))
+                ->required('name', 'slug', 'content')
+                ->empty('name', 'slug', 'content')
+                ->isNotSlug('slug');
 
             //process
-            if (empty($fail)) {
+            if ($validator->isValid()) {
                 $this->postsTable->NewPost($body['name'], $body['content'], $body['slug']);
                 $this->flash->success('post has been create');
                 return $this->router->redirect('admin.posts');
             }else{
                 $errorList = '';
-                foreach ($fail as $element){
+                foreach ($validator->getError() as $element){
                     $errorList = $errorList .
                         ' <br> - ' . $element;
                 }

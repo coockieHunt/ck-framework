@@ -112,9 +112,15 @@ class Validator
      */
     public function isNotSlug(string $val): self{
         $slug = $this->getParam($val);
-        if (preg_match('/\s/', $slug) || preg_match('/[0-9]+/', $slug)){
-            $this->setError($slug, __FUNCTION__ );
+        $pattern = '/^([a-z0-9]+-?)+$/';
+        if (!is_null($slug) && !preg_match($pattern, $slug)) {
+            $this->setError($slug, __FUNCTION__);
         }
+        return $this;
+    }
+
+    public function CustomError(string $key, string $message): self{
+        $this->setError($key, $message, [] , false);
         return $this;
     }
 
@@ -134,11 +140,17 @@ class Validator
      * @param string $key
      * @param string $value
      * @param array $attributes
+     * @param bool|null $catchMessage
      */
-    private function setError(string $key, string $value, array $attributes = []): void
+    private function setError(string $key, string $value, array $attributes = [], ?bool $catchMessage = true): void
     {
-        $error = new ValidatorError($key, $value , $attributes);
-        $this->error[$key] = (string)$error;
+        if ($catchMessage){
+            $error = new ValidatorError($key, $value , $attributes);
+            $this->error[$key] = (string)$error;
+        }else{
+            $this->error[$key] = (string)$value;
+        }
+
     }
 
     /**

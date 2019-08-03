@@ -1,0 +1,28 @@
+:root{
+    /* sidenav*/
+    --sidenav--size : 220px;
+    --sidenav--header-size : 70px;
+    --sidenav--header-margin :auto 15px auto 35px;
+    --sidenav--divider-size : 86%;
+    --sidenav-text-color : rgba(255, 255, 255, .4);
+    --sidenav-text-hover-color : rgb(255, 255, 255);
+    --sidenav-text-active-color : rgb(255, 255, 255);
+    /* dropdown */
+    --sidenav--dropdown-background-color : rgb(255, 255, 255);
+    --sidenav--dropdown-width : 80%;
+    --sidenav--dropdown-shadow : 0 .15rem 1.75rem 0 rgba(58, 59, 69, .20) !important;
+
+
+    /* topnav */
+    --topbar--size : 3em;
+    /* color */
+    --color--egg-shell: rgb(247, 247, 247);
+    --color--main : rgb(78, 115, 223);
+    --color--main-accent : rgb(67, 93, 185);
+    --color--success : rgb(94, 223, 118);
+    --color--success-accent : rgb(72, 159, 79);
+    --color--warning : rgb(229, 175, 67);
+    --color--warning-accent : rgb(185, 141, 55);
+    --color--danger : rgb(207, 46, 67);
+    --color--danger-accent : rgb(186, 41, 60);
+}

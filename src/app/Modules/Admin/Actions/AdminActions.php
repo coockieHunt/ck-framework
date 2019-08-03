@@ -59,4 +59,9 @@ class AdminActions extends ModuleFunction
             ]
         );
     }
+
+    public function newDash(){
+        return $this->Render('DashNew'
+        );
+    }
 }

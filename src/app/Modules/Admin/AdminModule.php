@@ -102,7 +102,7 @@ class AdminModule extends ModuleFunction
         $this->AddRoute(
             '/new',
             [AdminActions::class, 'newDash'],
-            'admin.posts.delete'
+            'admin.template.new'
         );
     }
 }

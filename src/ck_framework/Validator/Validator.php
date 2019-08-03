@@ -150,7 +150,6 @@ class Validator
         }else{
             $this->error[$key] = (string)$value;
         }
-
     }
 
     /**

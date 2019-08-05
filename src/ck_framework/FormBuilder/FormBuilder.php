@@ -61,12 +61,12 @@ class FormBuilder
         return $this;
     }
 
-    public function build(){
+    public function build(): array{
         $input = array_reverse($this->form);
         $start = '<form action="'. $this->action . '" method="'. $this->method . '">';
         array_unshift($input, $start);
         $input[] = '<form/>';
-        echo implode("\n", $input);
+        return $input;
     }
 
     /**

@@ -3,6 +3,7 @@
 use ck_framework\Twig\PaginationTwigExtension;
 use ck_framework\TwigExtension\AssetTwigExtension;
 use ck_framework\TwigExtension\FlashTwigExtension;
+use ck_framework\TwigExtension\FormTwigExtension;
 use ck_framework\TwigExtension\RouterTwigExtension;
 use ck_framework\TwigExtension\SelfCutTextTwigExtension;
 
@@ -38,7 +39,8 @@ $config = [
         AssetTwigExtension::class,
         RouterTwigExtension::class,
         PaginationTwigExtension::class,
-        FlashTwigExtension::class
+        FlashTwigExtension::class,
+        FormTwigExtension::class
     ]
 ];
 

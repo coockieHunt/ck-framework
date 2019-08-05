@@ -53,15 +53,10 @@ class AdminActions extends ModuleFunction
     public function routing(){
         $list = $this->router->getRouteList();
 
-        return $this->Render('routing\routing',
-            [
-                'routing' => $list
-            ]
-        );
+        return $this->Render('routing\routing', ['routing' => $list]);
     }
 
     public function newDash(){
-        return $this->Render('DashNew'
-        );
+        return $this->Render('DashNew');
     }
 }

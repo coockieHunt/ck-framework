@@ -54,13 +54,14 @@ class FormBuilder
     /**
      * add text input
      * @param string $name
+     * @param string|null $placeHolder
      * @param string|null $label
      * @param array|null $args
      * @return FormBuilder
      */
-    public function text(string $name, ?string $label = null, ?array $args = []) :self {
+    public function text(string $name ,?string $placeHolder ='' ,?string $label = null, ?array $args = []) :self {
         $value = $this->getValue($name);
-        $form = $this->buildInput( 'text', $name,  $value , $label , $args);
+        $form = $this->buildInput( 'text', $name, $placeHolder,  $value , $label , $args);
         $this->setForm($form);
 
         return $this;
@@ -69,13 +70,14 @@ class FormBuilder
     /**
      * add password input
      * @param string $name
+     * @param string|null $placeHolder
      * @param string|null $label
      * @param array|null $args
      * @return FormBuilder
      */
-    public function password(string $name, ?string $label = null, ?array $args = []) :self {
+    public function password(string $name, ?string $placeHolder ='', ?string $label = null, ?array $args = []) :self {
         $value = $this->getValue($name);
-        $form = $this->buildInput( 'password', $name,  $value , $label , $args);
+        $form = $this->buildInput( 'password', $name, $placeHolder,  $value , $label , $args);
         $this->setForm($form);
         return $this;
     }
@@ -83,13 +85,14 @@ class FormBuilder
     /**
      * add email input
      * @param string $name
+     * @param string|null $placeHolder
      * @param string|null $label
      * @param array|null $args
      * @return FormBuilder
      */
-    public function email(string $name, ?string $label = null, ?array $args = []) :self {
+    public function email(string $name ,?string $placeHolder ='' , ?string $label = null, ?array $args = []) :self {
         $value = $this->getValue($name);
-        $form = $this->buildInput( 'email', $name,  $value , $label , $args);
+        $form = $this->buildInput( 'email', $name,$placeHolder ,  $value , $label , $args);
         $this->setForm($form);
 
         return $this;
@@ -107,9 +110,10 @@ class FormBuilder
         $value = $this->getValue($name);
         $div = SnippetUtils::ArrayArgsToHtml($this->divArgs);
         $args = SnippetUtils::ArrayArgsToHtml($args);
-        $placeHolder = $this->faker->text(2000);
+        $placeHolder = $this->faker->text(1500);
 
-        $form = sprintf('<textarea name="%s" rows="'. $rows .'" %s placeholder="%s">%s</textarea>', $name, $args, $placeHolder, $value);
+        $string = '<textarea name="%s" rows="'. $rows .'" %s placeholder="%s">%s</textarea>';
+        $form = sprintf($string, $name, $args, $placeHolder, $value);
 
         $build = [
             '<div '. $div .'>',
@@ -155,57 +159,8 @@ class FormBuilder
      */
     public function setArgs(array $args):self {
         $this->value = $args;
+
         return $this;
-    }
-
-    /**
-     * build simple input
-     * @param string $type
-     * @param string $name
-     * @param string|null $value
-     * @param string|null $label
-     * @param array|null $args
-     * @return array|string
-     */
-    private function buildInput(string $type, string $name, ?string $value = '' , ?string $label = null , ?array $args = []){
-        $div = SnippetUtils::ArrayArgsToHtml($this->divArgs);
-        $output = SnippetUtils::ArrayArgsToHtml($args);
-        $form = sprintf('<input type="%s" value="%s" name="%s" %s/>', $type, $value, $name, $output);
-        if ($label == null){
-            return $form;
-        }else{
-            $build = [
-                '<div '. $div .'>',
-                '<label for="'. $name .'">' . $label . '</label> ',
-                $form,
-                '</div>',
-            ];
-            return $build;
-        }
-    }
-
-    /**
-     * set form in $this->form
-     * @param mixed $form
-     */
-    private function setForm($form): void
-    {
-        if (gettype($form)  == 'array'){
-            $this->form =  array_merge($this->form, $form);
-        }else{
-            $this->form[] = $form;
-        }
-    }
-
-
-    /**
-     * get value
-     * @param string $value
-     * @return mixed|null
-     */
-    private function getValue(string $value){
-        if(isset($this->value[$value])){return $this->value[$value];};
-        return null;
     }
 
     /**
@@ -232,5 +187,62 @@ class FormBuilder
     public function end(): string
     {
         return '</form>';
+    }
+
+    /**
+     * build simple input
+     * @param string $type
+     * @param string $name
+     * @param string|null $placeHolder
+     * @param string|null $value
+     * @param string|null $label
+     * @param array|null $args
+     * @return array|string
+     */
+    private function buildInput(
+        string $type,
+        string $name,
+        ?string $placeHolder = '',
+        ?string $value = '' ,
+        ?string $label = null ,
+        ?array $args = []
+    ){
+        $div = SnippetUtils::ArrayArgsToHtml($this->divArgs);
+        $output = SnippetUtils::ArrayArgsToHtml($args);
+        $form = sprintf('<input type="%s" value="%s" name="%s" placeholder="%s" %s/>', $type, $value, $name, $placeHolder, $output);
+        if ($label == null){
+            return $form;
+        }else{
+            $build = [
+                '<div '. $div .'>',
+                '<label for="'. $name .'">' . $label . '</label> ',
+                $form,
+                '</div>',
+            ];
+            return $build;
+        }
+    }
+
+    /**
+     * set form in $this->form
+     * @param mixed $form
+     */
+    private function setForm($form): void
+    {
+        if (gettype($form)  == 'array'){
+            $this->form =  array_merge($this->form, $form);
+        }else{
+            $this->form[] = $form;
+        }
+    }
+
+    /**
+     * get value
+     * @param string $value
+     * @return mixed|null
+     */
+    private function getValue(string $value){
+        if(isset($this->value[$value])){return $this->value[$value];};
+        return null;
     }
 }

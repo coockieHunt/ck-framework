@@ -71,12 +71,72 @@ class AdminPostActions extends ModuleFunction
     }
 
     /**
+     * create new post
+     * @param Request $request
+     * @return mixed|ResponseInterface
+     * @throws Exception
+     */
+    public function postNew(Request $request){
+        //get body request
+        $body = $request->getParsedBody();
+
+        // build form
+        $formUri = $this->router->generateUri('admin.posts.new.post');
+        $formClass = ['class' => 'form-group'];
+        $form = (new FormBuilder($formUri, 'POST', $formClass))
+            ->setArgs($body)
+            ->text('name',
+                'the creators of the original work give their opinion on the remake',
+                'title :',
+                ['class' => 'form-control']
+            )
+            ->text('slug',
+                'this-and-slug',
+                'slug :',
+                ['class' => 'form-control']
+            )
+            ->textarea('content', 10,'content :', ['class' => 'form-control']);
+
+        //process add post
+        if ($request->getMethod() == 'POST'){
+            //check if slug exist
+            $SlugCheck = $this->postsTable->FindBySlug($body['slug']);
+
+            /* check form field */
+            $validator = (new Validator($body))
+                ->required('name', 'slug', 'content')
+                ->empty('name', 'slug', 'content')
+                ->isNotSlug('slug');
+
+            if ($SlugCheck != false) {
+                $validator->CustomError('slug', '"' . $body['slug'] . '" is slug and already used');
+            }
+            //process
+            if ($validator->isValid()) {
+                $this->postsTable->NewPost($body['name'], $body['content'], $body['slug']);
+                $this->flash->success('post has been create');
+                return $this->router->redirect('admin.posts');
+            }else{
+                $errorList = '';
+                foreach ($validator->getError() as $element){
+                    $errorList = $errorList .
+                        ' <br> - ' . $element;
+                }
+                $this->flash->error('post error :' . $errorList);
+            }
+        }
+
+        return $this->Render('post\postNew',['form' => $form ]);
+    }
+
+    /**
      * edit specific post
      * @param Request $request
      * @return mixed|ResponseInterface
      * @throws Exception
      */
     public function postEdit(Request $request){
+        $body = $request->getParsedBody();
         //get uri Attribute
         $RequestId = $request->getAttribute('id');
 
@@ -84,12 +144,29 @@ class AdminPostActions extends ModuleFunction
         $post = $this->postsTable->FindById($RequestId);
         if ($post == false){return $this->router->redirect('admin.index');}
 
+        //setup form
+        $formUri = $this->router->generateUri('admin.posts.edit.post', ['id' => $post->id]);
+        $formClass = ['class' => 'form-group'];
+        $args = ['name' => $post->name, 'slug' => $post->slug, 'content' => $post->content];
+        if (empty($body)){$body = $args;}
+        $form = (new FormBuilder($formUri, 'POST', $formClass))
+            ->setArgs($body)
+            ->text('name',
+                'the creators of the original work give their opinion on the remake',
+                'title :',
+                ['class' => 'form-control']
+            )
+            ->text('slug',
+                'this-and-slug',
+                'slug :',
+                ['class' => 'form-control']
+            )
+            ->textarea('content', 10,'content :', ['class' => 'form-control']);
+
         //add post process
         if ($request->getMethod() == 'POST'){
             //get information
-            $body = $request->getParsedBody();
             $SlugCheck = $this->postsTable->FindBySlug($body['slug']);
-
             /* check form field */
             $validator = (new Validator($body))
                 ->required('name', 'slug', 'content')
@@ -115,54 +192,7 @@ class AdminPostActions extends ModuleFunction
             }
         }
 
-        return $this->Render('post\postEdit', ['post' => $post,]);
-    }
-
-    /**
-     * create new post
-     * @param Request $request
-     * @return mixed|ResponseInterface
-     * @throws Exception
-     */
-    public function postNew(Request $request){
-        $formUri = $this->router->generateUri('admin.posts.new');
-        $formClass = ['class' => 'form-group'];
-
-        $form = (new FormBuilder($formUri, 'POST', $formClass))
-            ->text('name', 'name :', ['class' => 'form-control'])
-            ->text('slug', 'slug :', ['class' => 'form-control'])
-            ->textarea('content', 10,'content :', ['class' => 'form-control']);
-
-        //process add post
-        if ($request->getMethod() == 'POST'){
-            $body = $request->getParsedBody();
-
-            $form->setArgs($body);
-            //check if slug exist
-            $SlugCheck = $this->postsTable->FindBySlug($body['slug']);
-
-            /* check form field */
-            $validator = (new Validator($body))
-                ->required('name', 'slug', 'content')
-                ->empty('name', 'slug', 'content')
-                ->isNotSlug('slug');
-
-            //process
-            if ($validator->isValid()) {
-                $this->postsTable->NewPost($body['name'], $body['content'], $body['slug']);
-                $this->flash->success('post has been create');
-                return $this->router->redirect('admin.posts');
-            }else{
-                $errorList = '';
-                foreach ($validator->getError() as $element){
-                    $errorList = $errorList .
-                        ' <br> - ' . $element;
-                }
-                $this->flash->error('post error :' . $errorList);
-            }
-        }
-
-        return $this->Render('post\postNew',['form' => $form ]);
+        return $this->Render('post\postEdit', ['post' => $post, 'form' => $form]);
     }
 
     /**
@@ -177,6 +207,7 @@ class AdminPostActions extends ModuleFunction
         $post = $this->postsTable->FindById($RequestId);
         if ($post == false){return $this->router->redirect('admin.index');}
 
+        //process delete posts
         if (isset($_GET['confirm'])){
             $this->postsTable->DeleteById($RequestId);
             $this->flash->warning('post has been delete');

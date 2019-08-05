@@ -4,6 +4,8 @@
 namespace ck_framework\FormBuilder;
 
 
+use ck_framework\Utils\SnippetUtils;
+
 class FormBuilder
 {
     /**
@@ -38,72 +40,33 @@ class FormBuilder
 
     public function text(string $name, ?string $label = null, ?array $args = []) :self {
         $value = $this->getValue($name);
-        $form = '<input type="text" value="' . $value. '" name="' . $name. '"' . implode($args) . '/>';
-        if ($label == null){
-            $this->setForm($form);
-        }else{
-            $build = [
-                '<p>',
-                '<label>',
-                $label,
-                '</label> ',
-                $form,
-                '<p>'
-            ];
-            $this->setForm($build);
-        }
+        $form = $this->buildInput( 'text', $name,  $value , $label , $args);
+        $this->setForm($form);
 
         return $this;
     }
 
     public function password(string $name, ?string $label = null, ?array $args = []) :self {
         $value = $this->getValue($name);
-        $form = '<input type="password" value="' . $value. '" name="' . $name. '"' . implode($args) . '/>';
-         if ($label == null){
-             $this->setForm($form);
-         }else{
-             $build = [
-                 '<p>',
-                 '<label>',
-                 $label,
-                 '</label> ',
-                 $form,
-                 '<p>'
-             ];
-             $this->setForm($build);
-         }
-
+        $form = $this->buildInput( 'password', $name,  $value , $label , $args);
+        $this->setForm($form);
         return $this;
     }
 
     public function email(string $name, ?string $label = null, ?array $args = []) :self {
         $value = $this->getValue($name);
-        $form = '<input type="email" value="' . $value. '" name="' . $name. '"' . implode($args) . '/>';
-        if ($label == null){
-            $this->setForm($form);
-        }else{
-            $build = [
-                '<p>',
-                '<label>',
-                $label,
-                '</label> ',
-                $form,
-                '<p>'
-            ];
-            $this->setForm($build);
-        }
+        $form = $this->buildInput( 'email', $name,  $value , $label , $args);
+        $this->setForm($form);
 
         return $this;
     }
 
     public function build(){
+        $input = array_reverse($this->form);
         $start = '<form action="'. $this->action . '" method="'. $this->method . '">';
-        array_unshift($this->form, $start);
-        $this->setForm('</form>');
-        foreach ($this->form as $element){
-            echo htmlspecialchars_decode($element) ;
-        }
-        dd();
+        array_unshift($input, $start);
+        $input[] = '<form/>';
+        echo implode("\n", $input);
     }
 
     /**
@@ -115,6 +78,23 @@ class FormBuilder
             $this->form = array_merge($form, $this->form);
         }else{
             $this->form[] = $form;
+        }
+    }
+
+    private function buildInput(string $type, string $name, ?string $value = '' , ?string $label = null , ?array $args = []){
+
+        $output = SnippetUtils::ArrayArgsToHtml($args);
+        $form = sprintf('<input type="%s" value="%s" name="%s" %s/>', $type, $value, $name, $output);
+        if ($label == null){
+            return $form;
+        }else{
+            $build = [
+                '<label for="'. $name .'">',
+                $label,
+                $form,
+                '</label> ',
+            ];
+            return array_reverse($build);
         }
     }
 

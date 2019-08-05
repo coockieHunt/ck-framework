@@ -6,6 +6,7 @@ namespace app\Modules\Admin\Actions;
 
 use app\ModuleFunction;
 use app\Modules\Blog\Table\PostsTable;
+use ck_framework\FormBuilder\FormBuilder;
 use ck_framework\Pagination\Pagination;
 use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
@@ -124,10 +125,19 @@ class AdminPostActions extends ModuleFunction
      * @throws Exception
      */
     public function postNew(Request $request){
+        $formUri = $this->router->generateUri('admin.posts.new');
+        $formClass = ['class' => 'form-group'];
+
+        $form = (new FormBuilder($formUri, 'POST', $formClass))
+            ->text('name', 'name :', ['class' => 'form-control'])
+            ->text('slug', 'slug :', ['class' => 'form-control'])
+            ->textarea('content', 10,'content :', ['class' => 'form-control']);
+
         //process add post
         if ($request->getMethod() == 'POST'){
             $body = $request->getParsedBody();
 
+            $form->setArgs($body);
             //check if slug exist
             $SlugCheck = $this->postsTable->FindBySlug($body['slug']);
 
@@ -152,7 +162,7 @@ class AdminPostActions extends ModuleFunction
             }
         }
 
-        return $this->Render('post\postNew');
+        return $this->Render('post\postNew',['form' => $form ]);
     }
 
     /**

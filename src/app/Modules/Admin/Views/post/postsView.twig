@@ -27,7 +27,6 @@
                     <table class="table table-bordered" id="dataTable" cellspacing="0">
                         <thead>
                         <tr>
-                            <th>Id</th>
                             <th>Name</th>
                             <th>Slug</th>
                             <th>Content</th>
@@ -40,7 +39,6 @@
 
                             {% for post in posts %}
                             <tr>
-                                <td>{{ post.id }}</td>
                                 <td>{{ post.name }}</td>
                                 <td>{{ post.slug }}</td>
                                 <td>{{ SelfCut(post.content , 0 ,30)  }}</td>

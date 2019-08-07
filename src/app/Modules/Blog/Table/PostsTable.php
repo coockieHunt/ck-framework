@@ -74,23 +74,25 @@ class PostsTable
         return $posts;
     }
 
-    public function UpdatePost(int $id, string $name, string $content, string $slug){
+    public function UpdatePost(int $id, string $name, string $content, string $slug,bool $active){
         $request = $this->PDO
-            ->prepare('UPDATE posts SET name = :name, content = :content, slug = :slug, update_at = NOW() WHERE posts.id = :id');
+            ->prepare('UPDATE posts SET name = :name, content = :content, slug = :slug , active = :active, update_at = NOW() WHERE posts.id = :id');
         $request->bindValue(':name', $name, PDO::PARAM_STR);
         $request->bindValue(':content', $content, PDO::PARAM_STR);
         $request->bindValue(':slug', $slug, PDO::PARAM_STR);
         $request->bindValue(':id', $id, PDO::PARAM_STR);
+        $request->bindValue(':active', $active, PDO::PARAM_BOOL);
         $request->execute();
     }
 
-    public function NewPost($name, $content, $slug)
+    public function NewPost($name, $content, $slug, $active)
     {
         $request = $this->PDO
-            ->prepare('INSERT INTO posts (name, content, slug, create_at, update_at) VALUES (:name , :content, :slug, NOW(), NOW())');
+            ->prepare('INSERT INTO posts (name, content, slug, active,create_at, update_at) VALUES (:name , :content, :slug, :active, NOW(), NOW())');
         $request->bindValue(':name', $name, PDO::PARAM_STR);
         $request->bindValue(':content', $content, PDO::PARAM_STR);
         $request->bindValue(':slug', $slug, PDO::PARAM_STR);
+        $request->bindValue(':active', $active, PDO::PARAM_BOOL);
         $request->execute();
     }
 

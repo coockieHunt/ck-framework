@@ -18,6 +18,9 @@ class BlogModule extends ModuleFunction
 {
 
     CONST DEFINITIONS = __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
+    CONST MIGRATIONS = __DIR__ . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'migrations';
+    CONST SEEDS =  __DIR__ . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'seeds';
+
     /**
      * @var PostsTable
      */

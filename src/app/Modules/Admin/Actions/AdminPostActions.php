@@ -11,6 +11,7 @@ use ck_framework\Pagination\Pagination;
 use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
 use ck_framework\Session\FlashService;
+use ck_framework\Utils\SnippetUtils;
 use ck_framework\Validator\Validator;
 use Exception;
 use Psr\Container\ContainerInterface;
@@ -95,7 +96,13 @@ class AdminPostActions extends ModuleFunction
                 'slug :',
                 ['class' => 'form-control']
             )
-            ->textarea('content', 10,'content :', ['class' => 'form-control']);
+            ->textarea('content', 10,'content :', ['class' => 'form-control'])
+            ->checkbox('active',
+                ['class' => 'form-check'],
+                true,
+                'active',
+                ['class' => 'form-check-input']
+            );
 
         //process add post
         if ($request->getMethod() == 'POST'){
@@ -113,7 +120,7 @@ class AdminPostActions extends ModuleFunction
             }
             //process
             if ($validator->isValid()) {
-                $this->postsTable->NewPost($body['name'], $body['content'], $body['slug']);
+                $this->postsTable->NewPost($body['name'], $body['content'], $body['slug'], $body["active"]);
                 $this->flash->success('post has been create');
                 return $this->router->redirect('admin.posts');
             }else{
@@ -147,8 +154,19 @@ class AdminPostActions extends ModuleFunction
         //setup form
         $formUri = $this->router->generateUri('admin.posts.edit.post', ['id' => $post->id]);
         $formClass = ['class' => 'form-group'];
-        $args = ['name' => $post->name, 'slug' => $post->slug, 'content' => $post->content];
-        if (empty($body)){$body = $args;}
+        $active = SnippetUtils::CheckBoxFormToBool($post->active);
+
+        if (empty($body)){
+            $args = ['name' => $post->name, 'slug' => $post->slug, 'content' => $post->content, 'active' => $active];
+            $body = $args;
+        }else{
+            if (isset($body['active']) ){
+                $body['active'] = true;
+            }else{
+                $body['active'] = false;
+            };
+        }
+
         $form = (new FormBuilder($formUri, 'POST', $formClass))
             ->setArgs($body)
             ->text('name',
@@ -161,7 +179,13 @@ class AdminPostActions extends ModuleFunction
                 'slug :',
                 ['class' => 'form-control']
             )
-            ->textarea('content', 10,'content :', ['class' => 'form-control']);
+            ->textarea('content', 10,'content :', ['class' => 'form-control'])
+            ->checkbox('active',
+                ['class' => 'form-check'],
+                true,
+                'active',
+                ['class' => 'form-check-input']
+            );
 
         //add post process
         if ($request->getMethod() == 'POST'){
@@ -179,7 +203,7 @@ class AdminPostActions extends ModuleFunction
 
             //process
             if ($validator->isValid()) {
-                $this->postsTable->UpdatePost($RequestId, $body['name'], $body['content'], $body['slug']);
+                $this->postsTable->UpdatePost($RequestId, $body['name'], $body['content'], $body['slug'], $body['active']);
                 $this->flash->success('post has been update');
                 return $this->router->redirect('admin.posts');
             }else{

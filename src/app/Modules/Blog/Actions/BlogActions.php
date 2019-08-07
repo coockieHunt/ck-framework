@@ -49,6 +49,7 @@ class BlogActions extends ModuleFunction
 
         if (!isset($_GET['p'])) {$current = 1;} else {$current = (int)$_GET['p'];}
 
+
         $postsCount = $this->postsTable->CountAll();
         $Pagination = new Pagination(
             10,
@@ -61,10 +62,17 @@ class BlogActions extends ModuleFunction
         $Pagination->setCurrentStep($current);
         $posts = $this->postsTable->FindResultLimit($Pagination->GetLimit(), $Pagination->getDbElementDisplay());
 
+        $postsActive = [];
+        foreach ($posts as $post){
+            if ($post->active){
+                $postsActive[] = $post;
+            }
+        }
+
         if (empty($posts)){return $this->router->redirect($redirect, [], ['p' => 1]);}
         return $this->Render("index" ,
             [
-                'posts' => $posts,
+                'posts' => $postsActive,
                 'dataPagination' => $Pagination
             ]
         );

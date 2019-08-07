@@ -16,9 +16,6 @@ use Exception;
 class AdminModule extends ModuleFunction
 {
     CONST DEFINITIONS = __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
-    CONST MIGRATIONS = __DIR__ . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'migrations';
-    CONST SEEDS =  __DIR__ . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'seeds';
-
 
     public function __construct(Router $router, RendererInterface  $renderer, ContainerInterface $container, PostsTable $postsTable){
         parent::init($router, $renderer, $container, __DIR__);

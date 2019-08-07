@@ -16,6 +16,7 @@ class PostSeeder extends AbstractSeed
                 'name' => $faker->catchPhrase,
                 'slug' => $faker->slug,
                 'content' => $faker->text(3000),
+                'active' => true,
                 'create_at' => date('Y-m-d H:i:s', $date),
                 'update_at' => date('Y-m-d H:i:s', $date)
             ];

@@ -8,12 +8,41 @@
     <h1 class="h3 mb-2 text-gray-800">Information :</h1>
     <p class="mb-4">DataTables is a listing posts register in the blog, if you want to add some, viewer  <a target="_blank" href="">this pages</a>.</p>
 
-    <a href="{{ generateUri('admin.posts.new') }}" class="btn btn-success btn-icon-split mb-2">
+
+
+    <a href="{{ generateUri('admin.posts.new') }}" class="btn btn-success btn-icon-split mb-3">
                                     <span class="icon text-white-50">
                                       <i class="fas fa-plus"></i>
                                     </span>
         <span class="text">New</span>
     </a>
+
+    <div class="accordion" id="accordionExample">
+        <div class="card">
+            <div class="card-header m-0 p-1" id="headingFilter">
+                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <span class="m-0 font-weight-bold text-primary">Filter +</span>
+                </button>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingFilter">
+                <div class="card-body">
+                    <form >
+                        <div class="row">
+                            <div class="col">
+                                <input type="text" class="form-control" placeholder="Title">
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" placeholder="slug">
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" placeholder="content">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">

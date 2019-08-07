@@ -180,6 +180,7 @@ class AdminPostActions extends ModuleFunction
                 ['class' => 'form-control']
             )
             ->textarea('content', 10,'content :', ['class' => 'form-control'])
+            ->addCategory('p', "Parameters :", ['class' => 'mb-1'])
             ->checkbox('active',
                 ['class' => 'form-check'],
                 true,

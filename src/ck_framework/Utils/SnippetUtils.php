@@ -71,4 +71,12 @@ class SnippetUtils
             array_keys($args)
         ));
     }
+
+    static function CheckBoxFormToBool(string $value){
+        if ($value == 'on' || $value == 1){
+            return true;
+        }
+
+        return false;
+    }
 }

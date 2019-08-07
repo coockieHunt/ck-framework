@@ -144,6 +144,21 @@ class FormBuilder
     }
 
     /**
+     * add title category
+     * @param string $html
+     * @param string $content
+     * @param array|null $args
+     * @return FormBuilder
+     */
+    public function addCategory(string $html, string $content, ?array $args = []) :self {
+        $args = SnippetUtils::ArrayArgsToHtml($args);
+
+        $form = sprintf(  '<%s %s>%s<%s>', $html, $args, $content , '/' . $html);
+        $this->setForm($form);
+        return $this;
+    }
+
+    /**
      * add text area input
      * @param string $name
      * @param int $rows
@@ -170,8 +185,6 @@ class FormBuilder
 
         return $this;
     }
-
-
 
     /**
      * build submit button

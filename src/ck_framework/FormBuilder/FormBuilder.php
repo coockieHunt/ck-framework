@@ -99,6 +99,51 @@ class FormBuilder
     }
 
     /**
+     * add checkbox input
+     * @param string $name
+     * @param array|null $divArgs
+     * @param boolean|null $checked
+     * @param string|null $label
+     * @param array|null $args
+     * @return FormBuilder
+     */
+    public function checkbox(
+        string $name ,
+        ?array $divArgs =  [],
+        ?bool $checked = false ,
+        ?string $label = null,
+        ?array $args = []
+    ) :self {
+        $value = $this->getValue($name);
+        $div = SnippetUtils::ArrayArgsToHtml($divArgs);
+        $formArgs = SnippetUtils::ArrayArgsToHtml($args);
+
+        $divForm = '<div %s>';
+        $divForm = sprintf($divForm, $div);
+
+        if (gettype($value) != 'boolean'){$value = $checked;}
+        if ($value){$value = 'checked';};
+
+        $form = '<input type="checkbox" name="%s" %s %s>';
+        $form = sprintf($form, $name, $formArgs, $value);
+
+        $formLabel = '<label >%s</label>';
+        $formLabel = sprintf($formLabel, $label);
+
+        $build = [
+            $divForm,
+            $form,
+            $formLabel,
+            '</div>'
+        ];
+
+
+        $this->setForm($build);
+
+        return $this;
+    }
+
+    /**
      * add text area input
      * @param string $name
      * @param int $rows

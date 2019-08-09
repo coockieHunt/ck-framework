@@ -6,6 +6,7 @@ use ck_framework\TwigExtension\FlashTwigExtension;
 use ck_framework\TwigExtension\FormTwigExtension;
 use ck_framework\TwigExtension\RouterTwigExtension;
 use ck_framework\TwigExtension\SelfCutTextTwigExtension;
+use ck_framework\TwigExtension\VarTwigExtension;
 
 include("AutoWire.php");
 
@@ -40,7 +41,8 @@ $config = [
         RouterTwigExtension::class,
         PaginationTwigExtension::class,
         FlashTwigExtension::class,
-        FormTwigExtension::class
+        FormTwigExtension::class,
+        VarTwigExtension::class
     ]
 ];
 

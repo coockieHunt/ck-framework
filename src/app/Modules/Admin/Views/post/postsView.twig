@@ -4,6 +4,56 @@
     {{ "post"|title }}
 {% endblock %}
 
+{% set filterForm %}
+    {{ formStart(form) }}
+    <div class="d-flex justify-content-center align-content-stretch">
+        {{ formBuild(form) }}
+    </div>
+    <div class="btn-group btn-group-toggle btn-block btn-lg text-white">
+        {{ formSubmit(form, 'shearch', {class: "btn btn-primary mt-3"}) }}
+        <a href="{{ generateUri('admin.posts') }}" type="button" class="btn btn-warning mt-3">clear</a>
+    </div>
+    {{ formEnd(form) }}
+{% endset %}
+
+{% set collapse %}
+    {% if varGet('name') or varGet('slug') or varGet('content') %}
+        <div class="accordion" id="accordionExample">
+            <div class="card">
+                <div class="card-header m-0 p-1" id="headingFilter">
+                    <button class="btn btn-link" type="button" >
+                        <span class="m-0 font-weight-bold text-primary">Filter</span>
+                    </button>
+                </div>
+
+                <div id="collapseFilter" class="" aria-labelledby="headingFilter">
+                    <div class="card-body">
+                        {{filterForm}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="accordion" id="accordionExample">
+            <div class="card">
+                <div class="card-header m-0 p-1" id="headingFilter">
+                    <button class="btn btn-link collapsed " type="button" data-toggle="collapse" data-target="#collapseFilter" aria-expanded="false" aria-controls="collapseTwo">
+                        <span class="m-0 font-weight-bold text-primary">Filter +</span>
+                    </button>
+                </div>
+
+                <div id="collapseFilter" class="collapse" aria-labelledby="headingFilter">
+                    <div class="card-body">
+                        {{filterForm}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endset %}
+
+
+
 {% block body %}
     <h1 class="h3 mb-2 text-gray-800">Information :</h1>
     <p class="mb-4">DataTables is a listing posts register in the blog, if you want to add some, viewer  <a target="_blank" href="">this pages</a>.</p>
@@ -17,95 +67,78 @@
         <span class="text">New</span>
     </a>
 
-    <div class="accordion" id="accordionExample">
-        <div class="card">
-            <div class="card-header m-0 p-1" id="headingFilter">
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    <span class="m-0 font-weight-bold text-primary">Filter +</span>
-                </button>
-            </div>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingFilter">
-                <div class="card-body">
-                    <form >
-                        <div class="row">
-                            <div class="col">
-                                <input type="text" class="form-control" placeholder="Title">
-                            </div>
-                            <div class="col">
-                                <input type="text" class="form-control" placeholder="slug">
-                            </div>
-                            <div class="col">
-                                <input type="text" class="form-control" placeholder="content">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% if posts is empty  %}
+        {{filterForm}}
+        <p class="text-center font-weight-bold text-warning text-uppercase h3 mt-2 mb-4"><strong>Empty posts result</strong></p>
+    {% else %}
+        {{ collapse }}
 
-    <!-- DataTales Example -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Posts listing</h6>
-        </div>
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Posts listing</h6>
+            </div>
 
-        <div class="card-body">
-            <div class="table-responsive-sm">
-                <div class="row">
-                    <table class="table table-bordered" id="dataTable" cellspacing="0">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Slug</th>
-                            <th>Content</th>
-                            <th>create at</th>
-                            <th>Update at</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+            <div class="card-body">
+                <div class="table-responsive-sm">
+                    <div class="row">
+                        <table class="table table-bordered" id="dataTable">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Slug</th>
+                                <th>Content</th>
+                                <th>create at</th>
+                                <th>Update at</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
 
                             {% for post in posts %}
-                            <tr>
-                                <td>{{ post.name }}</td>
-                                <td>{{ post.slug }}</td>
-                                <td>{{ SelfCut(post.content , 0 ,30)  }}</td>
-                                <td>{{ post.create_at|date("m/d/Y") }} <br> {{ post.create_at|date("H:i:s") }}</td>
-                                <td>{{ post.update_at|date("m/d/Y") }} <br> {{ post.update_at|date("H:i:s") }}</td>
-                                <td class="">
-                                    <div >
-                                        <a href="{{ generateUri('posts.show', {slug: post.slug, id: post.id}) }}"
-                                                class=" mr-auto btn btn-success btn-circle btn-sm mt-1">
-                                            <i class="far fa-eye"></i>
-                                        </a>
+                                {% if post.active == 0%}
+                                    {% set color = 'table-warning' %}
+                                {% else %}
+                                    {% set color = 'table-ligh' %}
+                                {% endif %}
+                                <tr>
+                                    <td class="{{ color }}">{{ post.name }}</td>
+                                    <td class="{{ color }}">{{ post.slug }}</td>
+                                    <td class="{{ color }}">{{ SelfCut(post.content , 0 ,30)  }}</td>
+                                    <td class="{{ color }}">{{ post.create_at|date("m/d/Y") }} <br> {{ post.create_at|date("H:i:s") }}</td>
+                                    <td class="{{ color }}">{{ post.update_at|date("m/d/Y") }} <br> {{ post.update_at|date("H:i:s") }}</td>
+                                    <td class="{{ color }}">
+                                        <div >
+                                            <a href="{{ generateUri('posts.show', {slug: post.slug, id: post.id}) }}"
+                                               class=" mr-auto btn btn-success btn-circle btn-sm mt-1">
+                                                <i class="far fa-eye"></i>
+                                            </a>
 
-                                        <a href="{{ generateUri('admin.posts.edit', {id: post.id}) }}"
-                                                class="mr-auto btn btn-warning btn-circle btn-sm mt-1">
-                                            <i class="fas fa-pen"></i>
-                                        </a>
+                                            <a href="{{ generateUri('admin.posts.edit', {id: post.id}) }}"
+                                               class="mr-auto btn btn-warning btn-circle btn-sm mt-1">
+                                                <i class="fas fa-pen"></i>
+                                            </a>
 
-                                        <a href="{{ generateUri('admin.posts.delete', {id: post.id}) }}"
-                                                class="mr-auto btn btn-danger btn-circle btn-sm mt-1">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
+                                            <a href="{{ generateUri('admin.posts.delete', {id: post.id}) }}"
+                                               class="mr-auto btn btn-danger btn-circle btn-sm mt-1">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
                             {% endfor %}
-                        <tbody>
-                    </table>
-                </div>
+                            <tbody>
+                        </table>
+                    </div>
 
-                <div class="row">
-                  <div class="col-sm-12 col-md-8">
-                  </div>
-                <div class="col-sm-12 col-md-4 float" style="display: flex; justify-content: flex-end">
-                    {{ Pagination('bootstrap', dataPagination) }}
+                    <div class="row">
+                        <div class="col-sm-12 col-md-8">
+                        </div>
+                        <div class="col-sm-12 col-md-4 float" style="display: flex; justify-content: flex-end">
+                            {{ Pagination('bootstrap', dataPagination) }}
+                        </div>
+                    </div>
                 </div>
-                </div>
-
             </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}

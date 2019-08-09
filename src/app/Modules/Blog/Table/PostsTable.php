@@ -33,6 +33,57 @@ class PostsTable
         return $posts;
     }
 
+    public function FindResultLimitFilter(string $name, string $slug, string $content, int $limit, int $offset) :array{
+        $filter = ['name' => $name , 'slug' => $slug , 'content' => $content ];
+        $filterParse = '';
+        $i = 0;
+        foreach ($filter as $key => $value){
+            if ($value != ''){
+                if ($i == 0){
+                    $filterParse = $filterParse . 'WHERE '.$key.' LIKE "%'.$value.'%" ';
+                }else{
+                    $filterParse = $filterParse . 'AND '.$key.' LIKE "%'.$value.'%" ';
+                }
+                $i ++;
+            }
+        }
+
+        $query = 'SELECT * FROM posts '. $filterParse .' LIMIT :limit, :offset';
+
+        $request = $this->PDO
+            ->prepare($query);
+        $request->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $request->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+        $request->execute();
+        $request->setFetchMode(PDO::FETCH_CLASS, PostsEntity::class);
+        $posts = $request->fetchAll();
+        return $posts;
+    }
+
+    public function CountFilter(string $name, string $slug, string $content)
+    {
+        $filter = ['name' => $name , 'slug' => $slug , 'content' => $content ];
+        $filterParse = '';
+        $i = 0;
+        foreach ($filter as $key => $value){
+            if ($value != ''){
+                if ($i == 0){
+                    $filterParse = $filterParse . 'WHERE '.$key.' LIKE "%'.$value.'%" ';
+                }else{
+                    $filterParse = $filterParse . 'AND '.$key.' LIKE "%'.$value.'%" ';
+                }
+                $i ++;
+            }
+        }
+
+        $query = 'SELECT COUNT(*) FROM posts '. $filterParse;
+        $posts = $this->PDO
+            ->query($query)
+            ->fetch();
+        return $posts;
+    }
+
     public function FindAll() :array{
         $request = $this->PDO
             ->prepare('SELECT * FROM posts');

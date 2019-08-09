@@ -57,18 +57,61 @@ class AdminPostActions extends ModuleFunction
      * @return mixed|ResponseInterface
      */
     public function posts(){
+        //set default pagination
+        if (!isset($_GET['p'])) {$current = 1;} else {$current = (int)$_GET['p'];}
+        //parse get parameter
+        $FilterContent = '';$FilterSlug = '';$FilterTitle = '';
+        if (!empty($_GET['name'])){$FilterTitle = $_GET['name'];};
+        if (!empty($_GET['slug'])){$FilterSlug = $_GET['slug'];};
+        if (!empty($_GET['content'])){$FilterContent = $_GET['content'];};
+
+        //get count result
+        $postsCount = $this->postsTable->CountFilter($FilterTitle, $FilterSlug, $FilterContent);
+
+        //setup form search
+        $formUri = $this->router->generateUri('admin.posts.post');
+        $formClass = ['class' => 'pr-1 align-items-stretch ', 'style' => 'flex-grow: 1'];
+        $form = (new FormBuilder($formUri, 'GET', $formClass))
+            ->setArgs($_GET)
+            ->text('name',
+                'Title',
+                null,
+                ['class' => 'form-control']
+            )
+            ->text('slug',
+                'slug',
+                null,
+                ['class' => 'form-control']
+            )
+            ->text('content',
+                'content',
+                null,
+                ['class' => 'form-control']
+            );
+
 
         //setup pagination
         $redirect = 'admin.posts';
-        if (!isset($_GET['p'])) {$current = 1;} else {$current = (int)$_GET['p'];}
-        $postsCount = $this->postsTable->CountAll();
-        $Pagination = new Pagination(10, 9, $postsCount[0], $redirect);
+        unset($_GET['p']);
+        $redirectGet = $_GET;
+        $Pagination = new Pagination(10, 9, $postsCount[0], $redirect, $redirectGet);
         $Pagination->setCurrentStep($current);
 
-        $posts = $this->postsTable->FindResultLimit($Pagination->GetLimit(), $Pagination->getDbElementDisplay());
 
+        //get result
+        if (count($_GET) > 1){
+            $posts = $this->postsTable->FindResultLimitFilter(
+                $FilterTitle,
+                $FilterSlug,
+                $FilterContent,
+                $Pagination->GetLimit(),
+                $Pagination->getDbElementDisplay()
+            );
+        }else{
+            $posts = $this->postsTable->FindResultLimit($Pagination->GetLimit(), $Pagination->getDbElementDisplay());
+        }
         //render view
-        return $this->Render('post\posts', ['posts' => $posts, 'dataPagination' => $Pagination]);
+        return $this->Render('post\posts', ['form' => $form, 'posts' => $posts, 'dataPagination' => $Pagination]);
     }
 
     /**

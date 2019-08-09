@@ -45,7 +45,7 @@ class FormTwigExtension extends AbstractExtension
      * @param array|null $args
      */
     public function formSubmit(FormBuilder $form, string $content, ?array $args = []){
-        echo implode("\n", $form->submit($content, $args));
+        echo implode("\t", $form->submit($content, $args));
     }
 
     /**
@@ -56,6 +56,4 @@ class FormTwigExtension extends AbstractExtension
     {
         echo  $form->end();
     }
-
-
 }

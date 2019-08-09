@@ -5,6 +5,7 @@ namespace app\Modules\Admin\Actions;
 
 
 use app\ModuleFunction;
+use app\Modules\Admin\Model\PostModel;
 use app\Modules\Blog\Table\PostsTable;
 use ck_framework\FormBuilder\FormBuilder;
 use ck_framework\Pagination\Pagination;
@@ -28,6 +29,10 @@ class AdminPostActions extends ModuleFunction
      * @var FlashService
      */
     private $flash;
+    /**
+     * @var PostModel
+     */
+    private $postModel;
 
     /**
      * AdminPostActions constructor.
@@ -36,6 +41,7 @@ class AdminPostActions extends ModuleFunction
      * @param ContainerInterface $container
      * @param PostsTable $postsTable
      * @param FlashService $flash
+     * @param PostModel $postModel
      * @throws Exception
      */
     public function __construct(
@@ -43,13 +49,15 @@ class AdminPostActions extends ModuleFunction
         RendererInterface  $renderer,
         ContainerInterface $container ,
         PostsTable $postsTable,
-        FlashService $flash
+        FlashService $flash,
+        PostModel $postModel
     )
     {
         $dir = substr(__DIR__, 0, strrpos(__DIR__, DIRECTORY_SEPARATOR));
         parent::init($router, $renderer, $container,  $dir);
         $this->postsTable = $postsTable;
         $this->flash = $flash;
+        $this->postModel = $postModel;
     }
 
     /**
@@ -69,7 +77,7 @@ class AdminPostActions extends ModuleFunction
         $postsCount = $this->postsTable->CountFilter($FilterTitle, $FilterSlug, $FilterContent);
 
         //setup form search
-        $formUri = $this->router->generateUri('admin.posts.post');
+        $formUri = $this->router->generateUri('admin.posts');
         $formClass = ['class' => 'pr-1 align-items-stretch ', 'style' => 'flex-grow: 1'];
         $form = (new FormBuilder($formUri, 'GET', $formClass))
             ->setArgs($_GET)
@@ -96,7 +104,6 @@ class AdminPostActions extends ModuleFunction
         $redirectGet = $_GET;
         $Pagination = new Pagination(10, 9, $postsCount[0], $redirect, $redirectGet);
         $Pagination->setCurrentStep($current);
-
 
         //get result
         if (count($_GET) > 1){
@@ -127,26 +134,7 @@ class AdminPostActions extends ModuleFunction
         // build form
         $formUri = $this->router->generateUri('admin.posts.new.post');
         $formClass = ['class' => 'form-group'];
-        $form = (new FormBuilder($formUri, 'POST', $formClass))
-            ->setArgs($body)
-            ->text('name',
-                'the creators of the original work give their opinion on the remake',
-                'title :',
-                ['class' => 'form-control']
-            )
-            ->text('slug',
-                'this-and-slug',
-                'slug :',
-                ['class' => 'form-control']
-            )
-            ->textarea('content', 10,'content :', ['class' => 'form-control'])
-            ->addCategory('p', "Parameters :", ['class' => 'mb-1'])
-            ->checkbox('active',
-                ['class' => 'form-check'],
-                true,
-                'active',
-                ['class' => 'form-check-input']
-            );
+        $form = $this->postModel->BuildPostMangerForm($body, $formUri, $formClass);
 
         //process add post
         if ($request->getMethod() == 'POST'){
@@ -199,38 +187,10 @@ class AdminPostActions extends ModuleFunction
         $formUri = $this->router->generateUri('admin.posts.edit.post', ['id' => $post->id]);
         $formClass = ['class' => 'form-group'];
         $active = SnippetUtils::CheckBoxFormToBool($post->active);
-
         if (empty($body)){
-            $args = ['name' => $post->name, 'slug' => $post->slug, 'content' => $post->content, 'active' => $active];
-            $body = $args;
-        }else{
-            if (isset($body['active']) ){
-                $body['active'] = true;
-            }else{
-                $body['active'] = false;
-            };
-        }
-
-        $form = (new FormBuilder($formUri, 'POST', $formClass))
-            ->setArgs($body)
-            ->text('name',
-                'the creators of the original work give their opinion on the remake',
-                'title :',
-                ['class' => 'form-control']
-            )
-            ->text('slug',
-                'this-and-slug',
-                'slug :',
-                ['class' => 'form-control']
-            )
-            ->textarea('content', 10,'content :', ['class' => 'form-control'])
-            ->addCategory('p', "Parameters :", ['class' => 'mb-1'])
-            ->checkbox('active',
-                ['class' => 'form-check'],
-                true,
-                'active',
-                ['class' => 'form-check-input']
-            );
+            $body = ['name' => $post->name, 'slug' => $post->slug, 'content' => $post->content, 'active' => $active];
+        }else{if (isset($body['active'])){$body['active'] = true;}else{$body['active'] = false;};}
+        $form = $this->postModel->BuildPostMangerForm($body, $formUri, $formClass);
 
         //add post process
         if ($request->getMethod() == 'POST'){

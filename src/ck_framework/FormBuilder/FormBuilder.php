@@ -41,7 +41,7 @@ class FormBuilder
      * @param string $method
      * @param array|null $divArgs
      */
-    public function __construct(string $action, string $method = 'POST',?array $divArgs = [])
+    public function __construct( $action, $method = 'POST',?array $divArgs = [])
     {
         $this->method = $method;
         $this->action = $action;
@@ -195,7 +195,7 @@ class FormBuilder
     public function submit(string $content, ?array $args = []) {
         $args = SnippetUtils::ArrayArgsToHtml($args);
 
-        $form = sprintf(  '<button type="submit" %s>', $args);
+        $form = sprintf('<button type="submit" %s>', $args);
 
         $build = [
             $form,
@@ -235,7 +235,13 @@ class FormBuilder
      */
     public function start(): string
     {
-        return '<form action="'. $this->action . '" method="'. $this->method . '">';
+        $action =  'action="'. $this->action . '"';
+        $method =  'method="'. $this->method . '"';
+
+        if ($this->action === null){$action = '';};
+        if ($this->method === null){$method = '';};
+
+        return '<form '. $action . ' ' . $method . '>';
     }
 
     /**
@@ -269,7 +275,11 @@ class FormBuilder
         $output = SnippetUtils::ArrayArgsToHtml($args);
         $form = sprintf('<input type="%s" value="%s" name="%s" placeholder="%s" %s/>', $type, $value, $name, $placeHolder, $output);
         if ($label == null){
-            return $form;
+            $build = [
+                '<div '. $div .'>',
+                $form,
+                '</div>',
+            ];
         }else{
             $build = [
                 '<div '. $div .'>',
@@ -277,8 +287,8 @@ class FormBuilder
                 $form,
                 '</div>',
             ];
-            return $build;
         }
+        return $build;
     }
 
     /**

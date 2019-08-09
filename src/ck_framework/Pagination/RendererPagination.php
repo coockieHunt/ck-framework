@@ -40,6 +40,7 @@ class RendererPagination
             $current_step = $pagination->getCurrentStep();
             $Number_step = $pagination->getNumberStep();
             $redirect_uri = $pagination->getRedirectUri();
+            $redirect_get = $pagination->getRedirectGet();
 
             $frac = $bar_element / 2;
             if (!is_float($frac)) {
@@ -66,17 +67,17 @@ class RendererPagination
             for ($i = 1; $i <= $Number_step; $i++) {
                 $element = $template::get()['element'];
                 if (in_array($i, $catch_number)) {
-                    $gen_uri = $router->generateUri($redirect_uri, [], ["p" => $i]);
+                    $gen_uri = $router->generateUri($redirect_uri, [] , array_merge(["p" => $i] , $redirect_get));
 
                     switch ($i) {
                         case $first:
-                            $uri = "href={$gen_uri}>{$template::get()['back']}";
+                            $uri = "href='{$gen_uri}'>{$template::get()['back']}";
                             break;
                         case $end:
-                            $uri = "href={$gen_uri}>{$template::get()['next']}";
+                            $uri = "href='{$gen_uri}'>{$template::get()['next']}";
                             break;
                         default:
-                            $uri = "href={$gen_uri}>{$i}";
+                            $uri = "href='{$gen_uri}'>{$i}";
                             break;
                     }
 

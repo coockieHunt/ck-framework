@@ -27,6 +27,10 @@ class Pagination
      * @var string
      */
     private $redirect_uri;
+    /**
+     * @var array|null
+     */
+    private $redirect_get;
 
     /**
      * Pagination constructor.
@@ -34,13 +38,14 @@ class Pagination
      * @param int $bar_element_display
      * @param int $number_db_element
      * @param string $redirect_uri
+     * @param array|null $redirect_get
      */
-    public function __construct(int $db_element_display, int $bar_element_display, int $number_db_element, string $redirect_uri)
+    public function __construct(int $db_element_display, int $bar_element_display, int $number_db_element, string $redirect_uri, ?array $redirect_get = [])
     {
         $this->DbElementDisplay = $db_element_display;
         $this->BarElementDisplay = $bar_element_display;
         $this->redirect_uri = $redirect_uri;
-
+        $this->redirect_get = $redirect_get;
 
         $this->number_step = ceil($number_db_element / $this->DbElementDisplay);
 
@@ -114,5 +119,13 @@ class Pagination
     public function getRedirectUri(): string
     {
         return $this->redirect_uri;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getRedirectGet(): ?array
+    {
+        return $this->redirect_get;
     }
 }

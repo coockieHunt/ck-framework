@@ -67,6 +67,7 @@ class AdminPostActions extends ModuleFunction
     public function posts(){
         //set default pagination
         if (!isset($_GET['p'])) {$current = 1;} else {$current = (int)$_GET['p'];}
+
         //parse get parameter
         $FilterContent = '';$FilterSlug = '';$FilterTitle = '';
         if (!empty($_GET['name'])){$FilterTitle = $_GET['name'];};
@@ -79,30 +80,12 @@ class AdminPostActions extends ModuleFunction
         //setup form search
         $formUri = $this->router->generateUri('admin.posts');
         $formClass = ['class' => 'pr-1 align-items-stretch ', 'style' => 'flex-grow: 1'];
-        $form = (new FormBuilder($formUri, 'GET', $formClass))
-            ->setArgs($_GET)
-            ->text('name',
-                'Title',
-                null,
-                ['class' => 'form-control']
-            )
-            ->text('slug',
-                'slug',
-                null,
-                ['class' => 'form-control']
-            )
-            ->text('content',
-                'content',
-                null,
-                ['class' => 'form-control']
-            );
-
+        $form = $this->postModel->BuildFindPostForm($_GET, $formUri, $formClass);
 
         //setup pagination
         $redirect = 'admin.posts';
         unset($_GET['p']);
-        $redirectGet = $_GET;
-        $Pagination = new Pagination(10, 9, $postsCount[0], $redirect, $redirectGet);
+        $Pagination = new Pagination(10, 9, $postsCount[0], $redirect, $_GET);
         $Pagination->setCurrentStep($current);
 
         //get result

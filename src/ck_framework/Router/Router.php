@@ -3,6 +3,7 @@
 
 namespace ck_framework\Router;
 
+use ck_framework\Utils\SnippetUtils;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -34,10 +35,10 @@ class Router
     public function get(string $path, $callable, string $name)
     {
         $methods = 'GET';
-        $NewRoute = new ZendRoute($path, new MiddlewareApp($callable), [$methods], $name);
-        $this->router->addRoute($NewRoute);
+        $this->router->addRoute( new ZendRoute($path, new MiddlewareApp($callable), [$methods], $name));
 
-        $this->RouteList[] = ['path' => $path, 'middleware' => $callable, 'methods' => $methods, 'name' => $name];
+        $params = $this->ParseParams($path);
+        $this->RouteList[] = ['path' => $path, 'middleware' => $callable, 'methods' => $methods, 'name' => $name, 'params' => $params];
     }
 
     /**
@@ -48,10 +49,10 @@ class Router
     public function post(string $path, $callable, string $name)
     {
         $methods = 'POST';
-        $NewRoute = new ZendRoute($path, new MiddlewareApp($callable), [$methods], $name);
-        $this->router->addRoute($NewRoute);
+        $this->router->addRoute(new ZendRoute($path, new MiddlewareApp($callable), [$methods], $name));
 
-        $this->RouteList[] = ['path' => $path, 'middleware' => $callable, 'methods' => $methods, 'name' => $name];
+        $params = $this->ParseParams($path);
+        $this->RouteList[] = ['path' => $path, 'middleware' => $callable, 'methods' => $methods, 'name' => $name, 'params' => $params];
     }
 
     /**
@@ -107,5 +108,33 @@ class Router
     public function getRouteList()
     {
         return $this->RouteList;
+    }
+
+    public function ParseParams(string $path){
+        $params = false;
+        if (SnippetUtils::IfStringContains('{', $path)){
+            $uri = explode('/', $path);
+            $params_uri = [];
+            foreach ($uri as $element){
+                if (SnippetUtils::IfStringContains('{', $element)){
+                    $element = explode('}', $element);
+                    $params_uri = $element;
+                }
+            }
+
+            foreach ($params_uri as $element){
+                if ($element != ""){
+                    $element = $element . '}';
+                    $parse = SnippetUtils::GetStringBetween($element,'{', '}');
+                    $ArgsRegex =  SnippetUtils::GetTextAfterChar(':', $parse);
+                    $ArgsRegex = str_replace('+', '' , $ArgsRegex);
+                    $ArgsName =  SnippetUtils::GetTextBeforeChar(':', $parse);
+
+                    $params[$ArgsName] = $ArgsRegex;
+                };
+            }
+        }
+
+        return $params;
     }
 }

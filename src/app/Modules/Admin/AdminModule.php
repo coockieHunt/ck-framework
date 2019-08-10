@@ -55,6 +55,18 @@ class AdminModule extends ModuleFunction
             'admin.routing'
         );
 
+        $this->AddRoute(
+            '/route/build/{name:[a-z\-]+}',
+            [AdminActions::class, 'routingBuild'],
+            'admin.routing.build'
+        );
+
+        $this->AddRoute(
+            '/route/build/{name:[a-z\-]+}',
+            [AdminActions::class, 'routingBuild'],
+            'admin.routing.build.post',
+            'POST'
+        );
         /***
          * POST ROUTE
          */

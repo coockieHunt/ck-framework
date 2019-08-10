@@ -4,9 +4,11 @@
     {{ "routing"|title }}
 {% endblock %}
 
+
 {% block body %}
     <h1 class="h3 mb-2 text-gray-800">Information :</h1>
     <p class="mb-4">DataTables is a listing of all the routes registered in the system, if you want to add some, viewer consulted  <a target="_blank" href="">this pages</a>.</p>
+
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -35,13 +37,26 @@
                             <td>{{ route.name|split('.')[0]  }}</td>
                             <td>{{ route.middleware[1] }}</td>
                             <td>
-                                {% if  route.methods == 'GET' %}
-                                <a href="" class="btn btn-primary btn-icon-split">
-                                    <span class="icon text-white-50">
-                                      <i class="fas fa-sign-in-alt"></i>
-                                    </span>
-                                    <span class="text">open</span>
-                                </a>
+                                {% if route.methods == 'GET' %}
+                                    {% if route.params == false %}
+                                        {% set RouteUri = generateUri(route.name) %}
+                                    {% else %}
+                                        {% set uri =  route.name|replace({'.': '-'}) %}
+                                        {% set RouteUri = generateUri('admin.routing.build', {name: uri}) %}
+                                    {% endif %}
+                                    <a href="{{ RouteUri }}" class="btn btn-primary btn-icon-split">
+                                        <span class="icon text-white-50">
+                                          <i class="fas fa-sign-in-alt"></i>
+                                        </span>
+                                        <span class="text">open</span>
+                                    </a>
+                                {% else %}
+                                    <a class="btn btn-warning btn-icon-split text-white-50" disabled>
+                                        <span class="icon ">
+                                          <i class="fas fa-lock"></i>
+                                        </span>
+                                        <span class="text">locked</span>
+                                    </a>
                                 {% endif %}
                             </td>
                         </tr>

@@ -32,4 +32,24 @@ class PostModel
 
         return $form;
     }
+
+    public function  BuildFindPostForm(array $args, string $formUri, array $formClass) : FormBuilder{
+        return (new FormBuilder($formUri, 'GET', $formClass))
+            ->setArgs($args)
+            ->text('name',
+                'Title',
+                null,
+                ['class' => 'form-control']
+            )
+            ->text('slug',
+                'slug',
+                null,
+                ['class' => 'form-control']
+            )
+            ->text('content',
+                'content',
+                null,
+                ['class' => 'form-control']
+            );
+    }
 }

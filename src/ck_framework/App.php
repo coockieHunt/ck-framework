@@ -69,7 +69,7 @@ class App
         $route = $router->match($request);
 
         //if route not matched
-        if (is_null($route)) {return $this->Return404();}
+        if ($route === null) {return $this->Return404();}
 
         //get params uri
         $params = $route->getParams();

@@ -8,7 +8,7 @@ use ck_framework\TwigExtension\RouterTwigExtension;
 use ck_framework\TwigExtension\SelfCutTextTwigExtension;
 use ck_framework\TwigExtension\VarTwigExtension;
 
-include("AutoWire.php");
+include "AutoWire.php";
 
 CONST SPACER = DIRECTORY_SEPARATOR;
 $AutoWire = new AutoWire();

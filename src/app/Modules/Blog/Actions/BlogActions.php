@@ -46,8 +46,8 @@ class BlogActions extends ModuleFunction
     public function index()
     {
         $redirect = 'posts.index';
-
-        if (!isset($_GET['p'])) {$current = 1;} else {$current = (int)$_GET['p'];}
+        $page = filter_input(INPUT_GET, 'p');
+        if (!isset($page)) {$current = 1;} else {$current = (int)$_GET['p'];}
 
 
         $postsCount = $this->postsTable->CountAll();

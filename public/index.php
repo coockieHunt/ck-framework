@@ -8,8 +8,8 @@ use function Http\Response\send;
 
 // setup var
 $space = DIRECTORY_SEPARATOR;
-require_once dirname(__DIR__) . $space . 'vendor' . $space . 'autoload.php';
-require_once dirname(__DIR__) . $space . 'config' . $space . 'modules.php';
+require dirname(__DIR__) . $space . 'vendor' . $space . 'autoload.php';
+require dirname(__DIR__) . $space . 'config' . $space . 'modules.php';
 
 // setup container
 $builder = new ContainerBuilder();

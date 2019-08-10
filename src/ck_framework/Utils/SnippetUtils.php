@@ -54,6 +54,23 @@ class SnippetUtils
     }
 
     /**
+     * get text between char
+     * @param $string
+     * @param $start
+     * @param $end
+     * @return bool|string
+     */
+    static function GetStringBetween($string, $start, $end){
+        $string = ' ' . $string;
+        $ini = strpos($string, $start);
+        if ($ini == 0) return '';
+        $ini += strlen($start);
+        $len = strpos($string, $end, $ini) - $ini;
+        return substr($string, $ini, $len);
+    }
+
+
+    /**
      * return string formatted for html
      * @param array $args
      * @return string

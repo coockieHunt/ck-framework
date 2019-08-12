@@ -20,6 +20,10 @@ class PostsEntity
 
     public $update_at;
 
+    public $active;
+
+    public $id_category;
+
     public function __construct()
     {
         if ($this->create_at) {

@@ -14,6 +14,7 @@ class PostSeeder extends AbstractSeed
             $date = $faker->unixTime('now');
             $data[] = [
                 'name' => $faker->catchPhrase,
+                'id_category' => rand(0, 10),
                 'slug' => $faker->slug,
                 'content' => $faker->text(3000),
                 'active' => true,

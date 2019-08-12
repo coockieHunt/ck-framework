@@ -8,6 +8,7 @@ class CreatePostsTable extends AbstractMigration
     public function change()
     {
         $this->table('posts')
+            ->addColumn('id_category', 'integer')
             ->addColumn('name', 'string')
             ->addColumn('slug', 'string')
             ->addColumn('content', 'text', ['limit' => MysqlAdapter::TEXT_LONG])

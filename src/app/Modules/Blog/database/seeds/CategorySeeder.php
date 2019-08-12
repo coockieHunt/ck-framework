@@ -13,8 +13,9 @@ class CategorySeeder extends AbstractSeed
         for ($i = 0; $i < 10; ++$i) {
             $date = $faker->unixTime('now');
             $data[] = [
-                'title' => $faker->catchPhrase,
                 'name' => $faker->catchPhrase,
+                'slug' => $faker->slug,
+                'update_at' => date('Y-m-d H:i:s', $date),
                 'create_at' => date('Y-m-d H:i:s', $date)
             ];
         }

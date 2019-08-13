@@ -67,6 +67,7 @@ class RendererPagination
             for ($i = 1; $i <= $Number_step; $i++) {
                 $element = $template::get()['element'];
                 if (in_array($i, $catch_number)) {
+                    unset($redirect_get['p']);
                     $gen_uri = $router->generateUri($redirect_uri, [] , array_merge(["p" => $i] , $redirect_get));
 
                     switch ($i) {

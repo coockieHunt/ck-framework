@@ -6,6 +6,7 @@ namespace app\Modules\Admin;
 
 use app\ModuleFunction;
 use app\Modules\Admin\Actions\AdminActions;
+use app\Modules\Admin\Actions\AdminCategoryActions;
 use app\Modules\Admin\Actions\AdminPostActions;
 use app\Modules\Blog\Table\PostsTable;
 use ck_framework\Renderer\RendererInterface;
@@ -58,14 +59,38 @@ class AdminModule extends ModuleFunction
         $this->AddRoute(
             '/route/build/{name:[a-z\-]+}',
             [AdminActions::class, 'routingBuild'],
-            'admin.routing.build'
+            'admin.routing.build',
+            ['GET','POST']
+        );
+
+
+        /***
+         * POSTS CATEGORY
+         */
+        $this->AddRoute(
+            '/category',
+            [AdminCategoryActions::class, 'category'],
+            'admin.category'
         );
 
         $this->AddRoute(
-            '/route/build/{name:[a-z\-]+}',
-            [AdminActions::class, 'routingBuild'],
-            'admin.routing.build.post',
-            'POST'
+            '/category/new',
+            [AdminCategoryActions::class, 'categoryNew'],
+            'admin.category.new',
+            ['GET','POST']
+        );
+
+        $this->AddRoute(
+            '/category/delete/{id:[0-9]+}',
+            [AdminCategoryActions::class, 'categoryDelete'],
+            'admin.category.delete'
+        );
+
+        $this->AddRoute(
+            '/category/edit/{id:[0-9]+}',
+            [AdminCategoryActions::class, 'categoryEdit'],
+            'admin.category.edit',
+            ['GET','POST']
         );
         /***
          * POST ROUTE
@@ -77,29 +102,17 @@ class AdminModule extends ModuleFunction
         );
 
         $this->AddRoute(
-            '/post/edit/{id:[0-9]+}',
-            [AdminPostActions::class, 'postEdit'],
-            'admin.posts.edit'
-        );
-
-        $this->AddRoute(
             '/post/new',
             [AdminPostActions::class, 'postNew'],
-            'admin.posts.new'
-        );
-
-        $this->AddRoute(
-            '/post/new',
-            [AdminPostActions::class, 'postNew'],
-            'admin.posts.new.post',
-            'POST'
+            'admin.posts.new',
+            ['GET','POST']
         );
 
         $this->AddRoute(
             '/post/edit/{id:[0-9]+}',
             [AdminPostActions::class, 'postEdit'],
-            'admin.posts.edit.post',
-            'POST'
+            'admin.posts.edit',
+            ['GET','POST']
         );
 
         $this->AddRoute(

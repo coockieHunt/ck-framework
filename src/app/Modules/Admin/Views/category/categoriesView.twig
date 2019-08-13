@@ -1,7 +1,7 @@
 {% extends 'Template/DashboardTemplateView.twig' %}
 
 {% block title %}
-    {{ "post"|title }}
+    {{ "category"|title }}
 {% endblock %}
 
 {% set filterForm %}
@@ -11,7 +11,7 @@
     </div>
     <div class="btn-group btn-group-toggle btn-block btn-lg text-white">
         {{ formSubmit(form, 'shearch', {class: "btn btn-primary mt-3"}) }}
-        <a href="{{ generateUri('admin.posts') }}" type="button" class="btn btn-warning mt-3">clear</a>
+        <a href="{{ generateUri('admin.category') }}" type="button" class="btn btn-warning mt-3">clear</a>
     </div>
     {{ formEnd(form) }}
 {% endset %}
@@ -53,27 +53,26 @@
 {% endset %}
 
 
-
 {% block body %}
     <h1 class="h3 mb-2 text-gray-800">Information :</h1>
-    <p class="mb-4">DataTables is a listing posts register in the blog, if you want to add some, viewer  <a target="_blank" href="">this pages</a>.</p>
+    <p class="mb-4">DataTables is a listing category register in the blog, if you want to add some, viewer  <a target="_blank" href="">this pages</a>.</p>
 
-    <a href="{{ generateUri('admin.posts.new') }}" class="btn btn-success btn-icon-split mb-3">
+    <a href="{{ generateUri('admin.category.new') }}" class="btn btn-success btn-icon-split mb-3">
                                     <span class="icon text-white-50">
                                       <i class="fas fa-plus"></i>
                                     </span>
         <span class="text">New</span>
     </a>
 
-    {% if posts is empty  %}
+    {% if categories is empty  %}
         {{filterForm}}
-        <p class="text-center font-weight-bold text-warning text-uppercase h3 mt-2 mb-4"><strong>Empty posts result</strong></p>
+        <p class="text-center font-weight-bold text-warning text-uppercase h3 mt-2 mb-4"><strong>Empty category result</strong></p>
     {% else %}
-        {{ collapse }}
-
         <div class="card shadow mb-4">
+            {{ collapse }}
+
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Posts listing</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Category listing</h6>
             </div>
 
             <div class="card-body">
@@ -84,39 +83,27 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Slug</th>
-                                <th>Content</th>
                                 <th>create at</th>
                                 <th>Update at</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
-
-                            {% for post in posts %}
-                                {% if post.active == 0%}
-                                    {% set color = 'table-warning' %}
-                                {% else %}
-                                    {% set color = 'table-ligh' %}
-                                {% endif %}
+                            {% for category in categories %}
                                 <tr>
-                                    <td class="{{ color }}">{{ post.name }}</td>
-                                    <td class="{{ color }}">{{ post.slug }}</td>
-                                    <td class="{{ color }}">{{ SelfCut(post.content , 0 ,30)  }}</td>
-                                    <td class="{{ color }}">{{ post.create_at|date("m/d/Y") }} <br> {{ post.create_at|date("H:i:s") }}</td>
-                                    <td class="{{ color }}">{{ post.update_at|date("m/d/Y") }} <br> {{ post.update_at|date("H:i:s") }}</td>
-                                    <td class="{{ color }}">
+                                    <td>{{ category.name }}</td>
+                                    <td>{{ category.slug }}</td>
+                                    <td>{{ category.create_at|date("m/d/Y") }} <br> {{ post.create_at|date("H:i:s") }}</td>
+                                    <td >{{ category.update_at|date("m/d/Y") }} <br> {{ post.update_at|date("H:i:s") }}</td>
+                                    <td>
                                         <div >
-                                            <a href="{{ generateUri('posts.show', {slug: post.slug, id: post.id}) }}"
-                                               class=" mr-auto btn btn-success btn-circle btn-sm mt-1">
-                                                <i class="far fa-eye"></i>
-                                            </a>
-
-                                            <a href="{{ generateUri('admin.posts.edit', {id: post.id}) }}"
+                                            <a href="{{ generateUri('admin.category.edit', {id: category.id}) }}"
                                                class="mr-auto btn btn-warning btn-circle btn-sm mt-1">
                                                 <i class="fas fa-pen"></i>
                                             </a>
-
-                                            <a href="{{ generateUri('admin.posts.delete', {id: post.id}) }}"
+                                        </div>
+                                        <div >
+                                            <a href="{{ generateUri('admin.category.delete', {id: category.id}) }}"
                                                class="mr-auto btn btn-danger btn-circle btn-sm mt-1">
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
@@ -126,12 +113,13 @@
                             {% endfor %}
                             <tbody>
                         </table>
-                    </div>
-
                     <div class="row">
                         <div class="col-sm-12 col-md-8"></div>
-                        <div class="col-sm-12 col-md-4 float" style="display: flex; justify-content: flex-end">
-                            {{ Pagination('bootstrap', dataPagination) }}
+                        <div class="row">
+                            <div class="col-sm-12 col-md-8"></div>
+                            <div class="col-sm-12 col-md-4 float" style="display: flex; justify-content: flex-end">
+                                {{ Pagination('bootstrap', dataPagination) }}
+                            </div>
                         </div>
                     </div>
                 </div>

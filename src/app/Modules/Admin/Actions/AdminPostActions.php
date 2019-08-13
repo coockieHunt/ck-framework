@@ -3,11 +3,9 @@
 
 namespace app\Modules\Admin\Actions;
 
-
 use app\ModuleFunction;
 use app\Modules\Admin\Model\PostModel;
 use app\Modules\Blog\Table\PostsTable;
-use ck_framework\FormBuilder\FormBuilder;
 use ck_framework\Pagination\Pagination;
 use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
@@ -84,10 +82,8 @@ class AdminPostActions extends ModuleFunction
 
         //setup pagination
         $redirect = 'admin.posts';
-        unset($_GET['p']);
         $Pagination = new Pagination(10, 9, $postsCount[0], $redirect, $_GET);
         $Pagination->setCurrentStep($current);
-
         //get result
         if (count($_GET) > 1){
             $posts = $this->postsTable->FindResultLimitFilter(
@@ -115,7 +111,7 @@ class AdminPostActions extends ModuleFunction
         $body = $request->getParsedBody();
 
         // build form
-        $formUri = $this->router->generateUri('admin.posts.new.post');
+        $formUri = $this->router->generateUri('admin.posts.new.POST');
         $formClass = ['class' => 'form-group'];
         $form = $this->postModel->BuildPostMangerForm($body, $formUri, $formClass);
 
@@ -167,7 +163,7 @@ class AdminPostActions extends ModuleFunction
         if ($post == false){return $this->router->redirect('admin.index');}
 
         //setup form
-        $formUri = $this->router->generateUri('admin.posts.edit.post', ['id' => $post->id]);
+        $formUri = $this->router->generateUri('admin.posts.edit.POST', ['id' => $post->id]);
         $formClass = ['class' => 'form-group'];
         $active = SnippetUtils::CheckBoxFormToBool($post->active);
         if (empty($body)){

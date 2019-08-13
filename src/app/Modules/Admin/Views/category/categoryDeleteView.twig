@@ -1,0 +1,22 @@
+{% extends 'Template/DashboardTemplateView.twig' %}
+
+{% block title %}
+    {{ "category delete"|title }}
+{% endblock %}
+
+{% block body %}
+    <h2>Are you sure you want to delete the category : </h2>
+
+    category name :
+    <p><strong>{{ category.name }}</strong></p>
+
+    category slug :
+    <p><strong>{{ category.slug }}</strong></p>
+
+    <a href="{{ generateUri('admin.category.delete', {id: category.id}, {'confirm': 'ok'}) }}" class="btn btn-danger btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </span>
+        <span class="text">Delete</span>
+    </a>
+{% endblock %}

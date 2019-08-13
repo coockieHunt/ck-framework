@@ -1,7 +1,7 @@
 {% extends 'Template/DashboardTemplateView.twig' %}
 
 {% block title %}
-    {{ "post edit"|title }}
+    {{ "category edit"|title }}
 {% endblock %}
 
 {% set ipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent maximus, mauris quis placerat lacinia, lectus nulla molestie metus, vel condimentum enim nisi et tortor. Suspendisse bibendum facilisis tellus at elementum. Quisque vel orci lectus. Vivamus nunc massa, placerat in vulputate ac, consequat vitae sem. Pellentesque iaculis iaculis justo, sed dapibus sem aliquet nec. Vivamus facilisis, nisi scelerisque pretium vestibulum, dui urna iaculis nisi, et placerat lacus odio vel arcu. Nam laoreet velit quis eros faucibus, nec elementum enim tempor. Nunc sed gravida nulla. Cras eget mauris in metus laoreet feugiat. Maecenas laoreet, orci lobortis feugiat egestas, metus ante dictum sapien, in sollicitudin tortor mi nec sem. Pellentesque suscipit, lorem nec commodo imperdiet, massa tortor feugiat lorem, id consequat lacus lorem eu dolor. Sed tellus eros, condimentum ut semper a, maximus sit amet dolor. Aliquam vitae libero id nunc pulvinar luctus. Nullam consectetur nibh ante, ut tempus lacus convallis vel. Nulla sodales facilisis volutpat." %}
@@ -25,7 +25,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p>Are you sure you want to change the content of this article the changes will be irreversible ?</p>
+                            <p>Are you sure you want to change the content of this category the changes will be irreversible ?</p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">no</button>
@@ -43,10 +43,9 @@
                     Information :
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">id : <br> {{ post.id }}</li>
-                    <li class="list-group-item">category id : <br> {{ post.id_category }} </li>
-                    <li class="list-group-item">created at : <br> {{ post.create_at|date("m/d/Y") }}</li>
-                    <li class="list-group-item">update at : <br> {{ post.update_at|date("m/d/Y") }}</li>
+                    <li class="list-group-item">id : <br> {{ category.id }}</li>
+                    <li class="list-group-item">created at : <br> {{ category.create_at|date("m/d/Y") }}</li>
+                    <li class="list-group-item">update at : <br> {{ category.update_at|date("m/d/Y") }}</li>
                 </ul>
             </div>
         </div>

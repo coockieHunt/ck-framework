@@ -95,7 +95,7 @@ class ModuleFunction
         return $this->renderer;
     }
 
-    public function AddRoute(string $uri, array $function, $name = null, string $method = 'GET', bool $use_prefix = true){
+    public function AddRoute(string $uri, array $function, $name = null, array $method = ['GET'], bool $use_prefix = true){
         $namespace = explode('\\', get_class($this));
         $prefix = null;
         if ($uri == "/"){$uri = "";};
@@ -107,28 +107,31 @@ class ModuleFunction
         }
 
         $class = $this->container->get($function[0]);
-
         $function = $function[1];
 
-        switch ($method) {
-            case 'GET':
-                $this->router->get(
-                    $prefix . $uri,
-                    //$class->$function(),
-                    [$class, $function],
-                    $name
-                );
-                break;
-            case 'POST':
-                $this->router->post(
-                    $prefix . $uri,
-                    [$class, $function],
-                    $name
-                );
-                break;
-            default:
-                throw new Exception('method not found');
-                break;
+        foreach ($method as $element){
+            switch ($element) {
+                case 'GET':
+                    $this->router->get(
+                        $prefix . $uri,
+                        [$class, $function],
+                        $name
+                    );
+                    break;
+                case 'POST':
+                    $this->router->post(
+                        $prefix . $uri,
+                        [$class, $function],
+                        $name . '.POST'
+                    );
+                    break;
+                default:
+                    throw new Exception('method not found');
+                    break;
+            }
         }
+
+
+
     }
 }

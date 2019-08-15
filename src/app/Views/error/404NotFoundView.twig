@@ -7,13 +7,15 @@
     {{ css("main.css") }}
     {{ css('font-awesome.min.css') }}
     {{ css('animate.css') }}
+    {{ css('dashboardTemplate.css') }}
+
 
 </head>
 <body class="bg-main">
     <div class="container">
         <div class="error-wrapper">
             <i class="fas fa-poop man-icon animated bounce"></i>
-            <h3>404</h3>
+            <div class="error text-white" data-text="404">404</div>
             <p class="info">Oh! Page not found</p>
             <div class="home-btn">
                 <a href="{{ generateUri('home.index') }}"><button type="button" class="btn btn-light btn-lg">Go Home</button></a>

@@ -107,13 +107,7 @@ class AdminActions extends ModuleFunction
             foreach ($body as $key => $value){
                 $regex = $params[$key];
 
-                if (preg_match_all('/'.$regex.'+/', $value)){
-                    if (preg_match('/\s/',$value)){
-                        $string = 'the value " %s " does not match the regex : %s';
-                        $string = sprintf($string, $value, $regex);
-                        $validator->CustomError($key, $string);
-                    }
-                }else{
+                if (!preg_match_all('/'.$regex.'+/', $value)) {
                     $string = 'the value " %s " does not match the regex : %s';
                     $string = sprintf($string, $value, $regex);
                     $validator->CustomError($key, $string);

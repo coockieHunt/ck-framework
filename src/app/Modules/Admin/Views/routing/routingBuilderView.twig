@@ -5,10 +5,11 @@
 {% endblock %}
 
 {% block body %}
-    <h1 class="h3 mb-2 text-gray-800">Information :</h1>
+    <h2 class="h3 mb-2 text-gray-800">Information :</h2>
     <p class="mb-1">this form aims to generate a url for a route in particular, if you want to add some, viewer consulted  <a target="_blank" href="">this pages</a>.</p>
     <p class="mb-4">if you can not complete the form because of regex, helped you  <a target="_blank" href="https://regex101.com/">this pages</a>.</p>
 
+    <h3>Build ({{ routeName }}) :</h3>
     {{ formStart(form) }}
     {{ formBuild(form) }}
     {{ formSubmit(form, 'Go', {class: "btn btn-primary"}) }}

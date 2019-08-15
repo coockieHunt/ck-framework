@@ -126,7 +126,7 @@ class AdminActions extends ModuleFunction
             }
         }
 
-        return $this->Render('routing\routingBuilder', ['route' => $thisRoute, 'form' => $form]);
+        return $this->Render('routing\routingBuilder', ['routeName' => $thisRoute['name'], 'form' => $form]);
     }
 
     public function newDash(){

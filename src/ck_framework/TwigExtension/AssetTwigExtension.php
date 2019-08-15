@@ -3,6 +3,7 @@
 
 namespace ck_framework\TwigExtension;
 
+use ck_framework\Utils\SnippetUtils;
 use Psr\Container\ContainerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -62,14 +63,16 @@ class AssetTwigExtension extends AbstractExtension
         echo "<script src='{$link}' type='text/javascript'>{$script}</script>";
     }
 
-    public function load_img(string $link, ?bool $locally = true): void
+    public function load_img(string $link, array $args = [], ?bool $locally = true): void
     {
         if ($locally){
             $dir = $this->dir;
-            $link = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/'. $dir .'/css/' . $link;
+            $link = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/'. $dir .'/img/' . $link;
         }
 
-        echo "<link rel='stylesheet' type='text/css' href='{$link}'>";
+        $args = SnippetUtils::ArrayArgsToHtml($args);
+
+        echo " <img {$args} src='{$link}'>";
     }
 
 }

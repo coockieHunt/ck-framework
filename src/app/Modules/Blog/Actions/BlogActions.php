@@ -9,6 +9,7 @@ use app\Modules\Blog\Table\PostsTable;
 use ck_framework\Pagination\Pagination;
 use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
+use ParsedownExtra;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -37,6 +38,11 @@ class BlogActions extends ModuleFunction
         $postId = $post->id;
         $postSlug = $post->slug;
 
+        //parse content
+        $Parse = new ParsedownExtra();
+
+        $post->content =  $Parse->text($post->content);
+
         //render page or redirect if uri not clear (slug or id not complete)
         if ($postId == $RequestId && $postSlug == $RequestSlug){
             return $this->Render("show" , ['post' => $post]);
@@ -61,7 +67,6 @@ class BlogActions extends ModuleFunction
 
         $Pagination->setCurrentStep($current);
         $posts = $this->postsTable->FindResultLimit($Pagination->GetLimit(), $Pagination->getDbElementDisplay());
-
         $postsActive = [];
         foreach ($posts as $post){
             if ($post->active){

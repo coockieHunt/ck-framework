@@ -89,7 +89,7 @@ class AdminActions extends ModuleFunction
         if ($thisRoute === null){return $this->router->redirect('admin.routing');};
 
         $uri = str_replace('.', '-', $thisRoute['name']);
-        $formUri = $this->router->generateUri('admin.routing.build.post', ['name' => $uri]);
+        $formUri = $this->router->generateUri('admin.routing.build.POST', ['name' => $uri]);
         $formClass = ['class' => 'form-group'];
         $form = (new FormBuilder($formUri, 'POST', $formClass))
             ->setArgs($body);

@@ -5,6 +5,7 @@ namespace app\Modules\Admin\Actions;
 
 use app\ModuleFunction;
 use app\Modules\Admin\Model\PostModel;
+use app\Modules\Blog\Table\CategoryTable;
 use app\Modules\Blog\Table\PostsTable;
 use ck_framework\Pagination\Pagination;
 use ck_framework\Renderer\RendererInterface;
@@ -31,6 +32,10 @@ class AdminPostActions extends ModuleFunction
      * @var PostModel
      */
     private $postModel;
+    /**
+     * @var CategoryTable
+     */
+    private $categoryTable;
 
     /**
      * AdminPostActions constructor.
@@ -38,6 +43,7 @@ class AdminPostActions extends ModuleFunction
      * @param RendererInterface $renderer
      * @param ContainerInterface $container
      * @param PostsTable $postsTable
+     * @param CategoryTable $categoryTable
      * @param FlashService $flash
      * @param PostModel $postModel
      * @throws Exception
@@ -47,6 +53,7 @@ class AdminPostActions extends ModuleFunction
         RendererInterface  $renderer,
         ContainerInterface $container ,
         PostsTable $postsTable,
+        CategoryTable $categoryTable,
         FlashService $flash,
         PostModel $postModel
     )
@@ -56,6 +63,7 @@ class AdminPostActions extends ModuleFunction
         $this->postsTable = $postsTable;
         $this->flash = $flash;
         $this->postModel = $postModel;
+        $this->categoryTable = $categoryTable;
     }
 
     /**
@@ -155,21 +163,38 @@ class AdminPostActions extends ModuleFunction
      */
     public function postEdit(Request $request){
         $body = $request->getParsedBody();
+
         //get uri Attribute
         $RequestId = $request->getAttribute('id');
 
         //get article
         $post = $this->postsTable->FindById($RequestId);
         if ($post == false){return $this->router->redirect('admin.index');}
+        $category = $this->categoryTable->FindById($post->id_category);
+        $Allcategory = $this->categoryTable->FindAll();
+        unset($post->id_category);
+        $post->category = $category;
 
+        $formCategory = [];
+        foreach ($Allcategory as $element){
+            $formCategory[$element->id] = $element->name;
+        }
         //setup form
         $formUri = $this->router->generateUri('admin.posts.edit.POST', ['id' => $post->id]);
         $formClass = ['class' => 'form-group'];
         $active = SnippetUtils::CheckBoxFormToBool($post->active);
+
         if (empty($body)){
-            $body = ['name' => $post->name, 'slug' => $post->slug, 'content' => $post->content, 'active' => $active];
+            $post->active = $active;
+
+            $body = [
+                'name' => $post->name,
+                'slug' => $post->slug,
+                'content' => $post->content,
+                'active' => $post->content,
+            ];
         }else{if (isset($body['active'])){$body['active'] = true;}else{$body['active'] = false;};}
-        $form = $this->postModel->BuildPostMangerForm($body, $formUri, $formClass);
+        $form = $this->postModel->BuildPostMangerForm($body, $formUri, $formClass, $formCategory);
 
         //add post process
         if ($request->getMethod() == 'POST'){
@@ -187,7 +212,7 @@ class AdminPostActions extends ModuleFunction
 
             //process
             if ($validator->isValid()) {
-                $this->postsTable->UpdatePost($RequestId, $body['name'], $body['content'], $body['slug'], $body['active']);
+                $this->postsTable->UpdatePost($RequestId, $body['name'], $body['content'], $body['slug'], $body['active'], $body['category']);
                 $this->flash->success('post has been update');
                 return $this->router->redirect('admin.posts');
             }else{

@@ -43,10 +43,10 @@ class PostsTable extends Table
     }
 
 
-    public function UpdatePost(int $id, string $name, string $content, string $slug, bool $active){
+    public function UpdatePost(int $id, string $name, string $content, string $slug, bool $active, int $category_id){
         $request = $this->PDO
             ->prepare('UPDATE posts SET id_category = :id_category, name = :name, content = :content, slug = :slug , active = :active, update_at = NOW() WHERE posts.id = :id');
-        $request->bindValue(':id_category', 1, PDO::PARAM_INT);
+        $request->bindValue(':id_category', $category_id, PDO::PARAM_INT);
         $request->bindValue(':name', $name, PDO::PARAM_STR);
         $request->bindValue(':content', $content, PDO::PARAM_STR);
         $request->bindValue(':slug', $slug, PDO::PARAM_STR);

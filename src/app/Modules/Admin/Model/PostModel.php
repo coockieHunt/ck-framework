@@ -8,7 +8,7 @@ use ck_framework\FormBuilder\FormBuilder;
 
 class PostModel
 {
-    public function BuildPostMangerForm(array $args, string $formUri, array $formClass) : FormBuilder{
+    public function BuildPostMangerForm(array $args, string $formUri, array $formClass, array $categorySelect) : FormBuilder{
         $form = (new FormBuilder($formUri, 'POST', $formClass))
             ->setArgs($args)
             ->text('name',
@@ -28,6 +28,11 @@ class PostModel
                 true,
                 'active',
                 ['class' => 'form-check-input']
+            )
+            ->select('category',
+                $categorySelect,
+                null,
+                ['class' => 'form-control']
             );
 
         return $form;

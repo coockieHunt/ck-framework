@@ -44,7 +44,8 @@
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">id : <br> {{ post.id }}</li>
-                    <li class="list-group-item">category id : <br> {{ post.id_category }} </li>
+                    <li class="list-group-item">category id : <br> {{ post.category.id }} </li>
+                    <li class="list-group-item">category: <br> {{ post.category.name }} </li>
                     <li class="list-group-item">created at : <br> {{ post.create_at|date("m/d/Y") }}</li>
                     <li class="list-group-item">update at : <br> {{ post.update_at|date("m/d/Y") }}</li>
                 </ul>

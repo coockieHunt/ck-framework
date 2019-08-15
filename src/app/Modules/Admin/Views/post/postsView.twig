@@ -79,7 +79,7 @@
             <div class="card-body">
                 <div class="table-responsive-sm">
                     <div class="row">
-                        <table class="table table-bordered" id="dataTable">
+                        <table class="table table-bordered">
                             <thead>
                             <tr>
                                 <th>Name</th>
@@ -105,21 +105,27 @@
                                     <td class="{{ color }}">{{ post.create_at|date("m/d/Y") }} <br> {{ post.create_at|date("H:i:s") }}</td>
                                     <td class="{{ color }}">{{ post.update_at|date("m/d/Y") }} <br> {{ post.update_at|date("H:i:s") }}</td>
                                     <td class="{{ color }}">
-                                        <div >
-                                            <a href="{{ generateUri('posts.show', {slug: post.slug, id: post.id}) }}"
-                                               class=" mr-auto btn btn-success btn-circle btn-sm mt-1">
-                                                <i class="far fa-eye"></i>
-                                            </a>
-
-                                            <a href="{{ generateUri('admin.posts.edit', {id: post.id}) }}"
-                                               class="mr-auto btn btn-warning btn-circle btn-sm mt-1">
-                                                <i class="fas fa-pen"></i>
-                                            </a>
-
-                                            <a href="{{ generateUri('admin.posts.delete', {id: post.id}) }}"
-                                               class="mr-auto btn btn-danger btn-circle btn-sm mt-1">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </a>
+                                        <div class="dropdown">
+                                            <button class="btn btn-primary btn-icon-split" type="button" id="dropdownMenuAction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-caret-down"></i>
+                                                </span>
+                                                <span class="text">action</span>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuAction">
+                                                <a class="dropdown-item text-primary" href="{{generateUri('posts.show', {slug: post.slug, id: post.id})}}">
+                                                    <i class="far fa-eye"></i>
+                                                    Show
+                                                </a>
+                                                <a class="dropdown-item text-warning" href="{{ generateUri('admin.posts.edit', {id: post.id}) }}">
+                                                    <i class="far fa-edit"></i>
+                                                    Edit
+                                                </a>
+                                                <a class="dropdown-item text-danger" href="{{ generateUri('admin.posts.delete', {id: post.id}) }}">
+                                                    <i class="far fa-trash-alt"></i>
+                                                    Delete
+                                                </a>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>

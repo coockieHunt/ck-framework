@@ -96,17 +96,23 @@
                                     <td>{{ category.create_at|date("m/d/Y") }} <br> {{ post.create_at|date("H:i:s") }}</td>
                                     <td >{{ category.update_at|date("m/d/Y") }} <br> {{ post.update_at|date("H:i:s") }}</td>
                                     <td>
-                                        <div >
-                                            <a href="{{ generateUri('admin.category.edit', {id: category.id}) }}"
-                                               class="mr-auto btn btn-warning btn-circle btn-sm mt-1">
-                                                <i class="fas fa-pen"></i>
-                                            </a>
-                                        </div>
-                                        <div >
-                                            <a href="{{ generateUri('admin.category.delete', {id: category.id}) }}"
-                                               class="mr-auto btn btn-danger btn-circle btn-sm mt-1">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </a>
+                                        <div class="dropdown">
+                                            <button class="btn btn-primary btn-icon-split" type="button" id="dropdownMenuAction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-caret-down"></i>
+                                                </span>
+                                                <span class="text">action</span>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuAction">
+                                                <a class="dropdown-item text-warning" href="{{generateUri('admin.category.edit', {id: category.id})}}">
+                                                    <i class="far fa-edit"></i>
+                                                    edit
+                                                </a>
+                                                <a class="dropdown-item text-danger" href="{{generateUri('admin.category.delete', {id: category.id})}}">
+                                                    <i class="far fa-trash-alt"></i>
+                                                    delete
+                                                </a>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>

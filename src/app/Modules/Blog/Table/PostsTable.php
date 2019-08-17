@@ -55,11 +55,11 @@ class PostsTable extends Table
         $request->execute();
     }
 
-    public function NewPost($name, $content, $slug, $active)
+    public function NewPost($name, $content, $slug, $active, $id_category)
     {
         $request = $this->PDO
             ->prepare('INSERT INTO posts (id_category, name, content, slug, active,create_at, update_at) VALUES (:id_category, :name , :content, :slug, :active, NOW(), NOW())');
-        $request->bindValue(':id_category', 1, PDO::PARAM_INT);
+        $request->bindValue(':id_category', $id_category, PDO::PARAM_INT);
         $request->bindValue(':name', $name, PDO::PARAM_STR);
         $request->bindValue(':content', $content, PDO::PARAM_STR);
         $request->bindValue(':slug', $slug, PDO::PARAM_STR);

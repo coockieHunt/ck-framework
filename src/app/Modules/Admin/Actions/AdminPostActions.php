@@ -121,7 +121,9 @@ class AdminPostActions extends ModuleFunction
         // build form
         $formUri = $this->router->generateUri('admin.posts.new.POST');
         $formClass = ['class' => 'form-group'];
-        $form = $this->postModel->BuildPostMangerForm($body, $formUri, $formClass);
+        $All_category = $this->categoryTable->FindAll();
+        $formCategory = $this->postModel->BuildArraySelect($All_category, 'id', 'name');
+        $form = $this->postModel->BuildPostMangerForm($body, $formUri, $formClass, $formCategory);
 
         //process add post
         if ($request->getMethod() == 'POST'){
@@ -139,7 +141,7 @@ class AdminPostActions extends ModuleFunction
             }
             //process
             if ($validator->isValid()) {
-                $this->postsTable->NewPost($body['name'], $body['content'], $body['slug'], $body["active"]);
+                $this->postsTable->NewPost($body['name'], $body['content'], $body['slug'], $body["active"], $body['category']);
                 $this->flash->success('post has been create');
                 return $this->router->redirect('admin.posts');
             }else{
@@ -186,16 +188,10 @@ class AdminPostActions extends ModuleFunction
                 'name' => $post->name,
                 'slug' => $post->slug,
                 'content' => $post->content,
-                'active' => $post->content,
+                'active' => $post->active,
                 'category' => $post->category->name,
             ];
-        }else{
-            if (isset($body['active'])){
-                $body['active'] = true;
-            }else{
-                $body['active'] = false;
-            };
-        }
+        }else{if (isset($body['active'])){$body['active'] = true;}else{$body['active'] = false;};}
         $form = $this->postModel->BuildPostMangerForm($body, $formUri, $formClass, $formCategory);
 
         //add post process

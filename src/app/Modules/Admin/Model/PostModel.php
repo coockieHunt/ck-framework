@@ -4,10 +4,36 @@
 namespace app\Modules\Admin\Model;
 
 
+use app\Modules\Blog\Table\CategoryTable;
+use app\Modules\Blog\Table\PostsTable;
 use ck_framework\FormBuilder\FormBuilder;
+use ck_framework\model\model;
 
-class PostModel
+class PostModel extends model
 {
+    /**
+     * @var PostsTable
+     */
+    private $postsTable;
+    /**
+     * @var CategoryTable
+     */
+    private $categoryTable;
+
+    public function __construct(PostsTable $postsTable, CategoryTable $categoryTable)
+    {
+        $this->postsTable = $postsTable;
+        $this->categoryTable = $categoryTable;
+    }
+
+    /**
+     * generate form Manger for post
+     * @param array $args
+     * @param string $formUri
+     * @param array $formClass
+     * @param array $categorySelect
+     * @return FormBuilder
+     */
     public function BuildPostMangerForm(array $args, string $formUri, array $formClass, array $categorySelect) : FormBuilder{
         $form = (new FormBuilder($formUri, 'POST', $formClass))
             ->setArgs($args)
@@ -38,7 +64,14 @@ class PostModel
         return $form;
     }
 
-    public function  BuildFindPostForm(array $args, string $formUri, array $formClass) : FormBuilder{
+    /**
+     * generate form for find specific post
+     * @param array $args
+     * @param string $formUri
+     * @param array $formClass
+     * @return FormBuilder
+     */
+    public function BuildFindPostForm(array $args, string $formUri, array $formClass) : FormBuilder{
         return (new FormBuilder($formUri, 'GET', $formClass))
             ->setArgs($args)
             ->text('name',
@@ -56,5 +89,16 @@ class PostModel
                 null,
                 ['class' => 'form-control']
             );
+    }
+
+    public function GetPostById(int $id){
+        $post = $this->postsTable->FindById($id);
+        if ($post){
+            $category = $this->categoryTable->FindById($post->id_category);
+            unset($post->id_category);
+            $post->category = $category;
+        }
+
+        return $post;
     }
 }

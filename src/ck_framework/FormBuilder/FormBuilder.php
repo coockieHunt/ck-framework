@@ -187,17 +187,18 @@ class FormBuilder
     }
 
     public function select(string $name,array $option = [], ?string $label = null, ?array $args = []) :self {
-        $value = $this->getValue($name);
+        $defaultValue = $this->getValue($name);
         $div = SnippetUtils::ArrayArgsToHtml($this->divArgs);
         $args = SnippetUtils::ArrayArgsToHtml($args);
-
 
         $string = '<select id="exampleFormControlSelect2" %s name="%s">';
         $form = sprintf($string, $args, $name);
 
         $optionParse = '';
         foreach ($option as $key => $value){
-            $element = "<option value='{$key}'>{$value}</option>";
+            $selected = '';
+            if ($defaultValue == $value or $defaultValue == $key){$selected = "selected='selected'";}
+            $element = "<option value='{$key}' {$selected}>{$value}</option>";
             $optionParse = $optionParse . $element;
         }
 

@@ -168,17 +168,12 @@ class AdminPostActions extends ModuleFunction
         $RequestId = $request->getAttribute('id');
 
         //get article
-        $post = $this->postsTable->FindById($RequestId);
-        if ($post == false){return $this->router->redirect('admin.index');}
-        $category = $this->categoryTable->FindById($post->id_category);
-        $Allcategory = $this->categoryTable->FindAll();
-        unset($post->id_category);
-        $post->category = $category;
+        $post = $this->postModel->GetPostById($RequestId);
+        if (!$post){return $this->router->redirect('admin.index');}
+        $All_category = $this->categoryTable->FindAll();
 
-        $formCategory = [];
-        foreach ($Allcategory as $element){
-            $formCategory[$element->id] = $element->name;
-        }
+        $formCategory = $this->postModel->BuildArraySelect($All_category, 'id', 'name');
+
         //setup form
         $formUri = $this->router->generateUri('admin.posts.edit.POST', ['id' => $post->id]);
         $formClass = ['class' => 'form-group'];
@@ -192,8 +187,15 @@ class AdminPostActions extends ModuleFunction
                 'slug' => $post->slug,
                 'content' => $post->content,
                 'active' => $post->content,
+                'category' => $post->category->name,
             ];
-        }else{if (isset($body['active'])){$body['active'] = true;}else{$body['active'] = false;};}
+        }else{
+            if (isset($body['active'])){
+                $body['active'] = true;
+            }else{
+                $body['active'] = false;
+            };
+        }
         $form = $this->postModel->BuildPostMangerForm($body, $formUri, $formClass, $formCategory);
 
         //add post process

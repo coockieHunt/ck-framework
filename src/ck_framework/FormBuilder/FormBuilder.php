@@ -117,7 +117,6 @@ class FormBuilder
         $value = $this->getValue($name);
         $div = SnippetUtils::ArrayArgsToHtml($divArgs);
         $formArgs = SnippetUtils::ArrayArgsToHtml($args);
-
         $divForm = '<div %s>';
         $divForm = sprintf($divForm, $div);
 

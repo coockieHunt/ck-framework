@@ -3,38 +3,20 @@
 
 namespace app\Modules\Admin\Model;
 
-
-use app\Modules\Blog\Table\CategoryTable;
-use app\Modules\Blog\Table\PostsTable;
+use app\Modules\Blog\Model\PostModel as BlogPostModel;
 use ck_framework\FormBuilder\FormBuilder;
-use ck_framework\model\model;
 
-class PostModel extends model
+class PostModel extends BlogPostModel
 {
-    /**
-     * @var PostsTable
-     */
-    private $postsTable;
-    /**
-     * @var CategoryTable
-     */
-    private $categoryTable;
-
-    public function __construct(PostsTable $postsTable, CategoryTable $categoryTable)
-    {
-        $this->postsTable = $postsTable;
-        $this->categoryTable = $categoryTable;
-    }
-
     /**
      * generate form Manger for post
      * @param array $args
      * @param string $formUri
-     * @param array $formClass
-     * @param array $categorySelect
      * @return FormBuilder
      */
-    public function BuildPostMangerForm(array $args, string $formUri, array $formClass, array $categorySelect) : FormBuilder{
+    public function BuildPostMangerForm(array $args, string $formUri) : FormBuilder{
+        $formClass = ['class' => 'form-group'];
+        $categorySelect = $this->BuildArraySelect($this->categoryTable->FindAll(), 'id', 'name');
         $form = (new FormBuilder($formUri, 'POST', $formClass))
             ->setArgs($args)
             ->text('name',
@@ -68,10 +50,10 @@ class PostModel extends model
      * generate form for find specific post
      * @param array $args
      * @param string $formUri
-     * @param array $formClass
      * @return FormBuilder
      */
-    public function BuildFindPostForm(array $args, string $formUri, array $formClass) : FormBuilder{
+    public function BuildFindPostForm(array $args, string $formUri) : FormBuilder{
+        $formClass = ['class' => 'pr-1 align-items-stretch ', 'style' => 'flex-grow: 1'];
         return (new FormBuilder($formUri, 'GET', $formClass))
             ->setArgs($args)
             ->text('name',
@@ -89,16 +71,5 @@ class PostModel extends model
                 null,
                 ['class' => 'form-control']
             );
-    }
-
-    public function GetPostById(int $id){
-        $post = $this->postsTable->FindById($id);
-        if ($post){
-            $category = $this->categoryTable->FindById($post->id_category);
-            unset($post->id_category);
-            $post->category = $category;
-        }
-
-        return $post;
     }
 }

@@ -8,9 +8,11 @@
 
 {% block body %}
     <div class="d-flex bd-highlight">
-        <div class="p-2 flex-fill bd-highlight mr-1">
-            {{ formStart(form) }}
-            {{ formBuild(form) }}
+        <div class="p-2 flex-fill ">
+            <h3 class="mt-3">Post data :</h3>
+
+            {{ formStart(formCategory) }}
+            {{ formBuild(formCategory) }}
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal">
                 Confirm
             </button>
@@ -29,15 +31,15 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">no</button>
-                            {{ formSubmit(form, 'yes', {class: "btn btn-primary"}) }}
+                            {{ formSubmit(formCategory, 'yes', {class: "btn btn-primary"}) }}
                         </div>
                     </div>
                 </div>
             </div>
-            {{ formEnd(form) }}
+            {{ formEnd(formCategory) }}
         </div>
 
-        <div>
+        <div class="p-2 bd-highlight">
             <div class="card" style="width: 18rem;">
                 <div class="card-header">
                     Information :
@@ -49,7 +51,42 @@
                 </ul>
             </div>
         </div>
+
     </div>
+
+    <div class="p-2">
+        <h3 class="mt-3">Post linked :</h3>
+
+        <div class="collapse" id="CustomCategory">
+            <div class="card card-body">
+                <a  data-toggle="collapse" href="#CustomCategory" role="button" aria-expanded="false" aria-controls="CustomCategory">
+                    <span>Custom category select</span>
+                    <i class="float-right fas fa-times"></i>
+                </a>
+                {{ formStart(formChangeCategoryCustom) }}
+                {{ formBuild(formChangeCategoryCustom) }}
+                {{ formSubmit(formChangeCategoryCustom, 'Change', {class: "btn btn-warning"}) }}
+                {{ formEnd(formChangeCategoryCustom) }}
+            </div>
+        </div>
+
+        <div id="custom">
+            <div>
+            </div>
+            {{ formStart(formChangeCategory) }}
+            <div class="float-right">
+                <a class="font-weight-bold" data-toggle="collapse" href="#CustomCategory" role="button" aria-expanded="false" aria-controls="CustomCategory">
+                    custom
+                    <i class="fas fa-plus"></i>
+                </a>
+            </div>
+            {{ formBuild(formChangeCategory) }}
+            {{ formSubmit(formChangeCategory, 'Change', {class: "btn btn-warning"}) }}
+            {{ formEnd(formChangeCategory) }}
+        </div>
+    </div>
+
+
 
 
 {% endblock %}

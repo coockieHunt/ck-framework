@@ -18,7 +18,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class AdminPostActions extends ModuleFunction
+class AdminPostActions
 {
     /**
      * @var PostsTable
@@ -36,34 +36,36 @@ class AdminPostActions extends ModuleFunction
      * @var CategoryTable
      */
     private $categoryTable;
+    /**
+     * @var ModuleFunction
+     */
+    private $moduleFunction;
 
     /**
      * AdminPostActions constructor.
-     * @param Router $router
-     * @param RendererInterface $renderer
-     * @param ContainerInterface $container
      * @param PostsTable $postsTable
      * @param CategoryTable $categoryTable
      * @param FlashService $flash
      * @param PostModel $postModel
+     * @param ModuleFunction $moduleFunction
      * @throws Exception
      */
     public function __construct(
-        Router $router,
-        RendererInterface  $renderer,
-        ContainerInterface $container ,
         PostsTable $postsTable,
         CategoryTable $categoryTable,
         FlashService $flash,
-        PostModel $postModel
+        PostModel $postModel,
+        ModuleFunction $moduleFunction
     )
     {
         $dir = substr(__DIR__, 0, strrpos(__DIR__, DIRECTORY_SEPARATOR));
-        parent::init($router, $renderer, $container,  $dir);
         $this->postsTable = $postsTable;
         $this->flash = $flash;
         $this->postModel = $postModel;
         $this->categoryTable = $categoryTable;
+        $this->moduleFunction = $moduleFunction;
+
+        $this->moduleFunction->init($dir, $this);
     }
 
     /**
@@ -84,9 +86,8 @@ class AdminPostActions extends ModuleFunction
         $postsCount = $this->postsTable->CountFilter($FilterTitle, $FilterSlug, $FilterContent);
 
         //setup form search
-        $formUri = $this->router->generateUri('admin.posts');
-        $formClass = ['class' => 'pr-1 align-items-stretch ', 'style' => 'flex-grow: 1'];
-        $form = $this->postModel->BuildFindPostForm($_GET, $formUri, $formClass);
+        $formUri =  $this->moduleFunction->getRouter()->generateUri('admin.posts');
+        $form = $this->postModel->BuildFindPostForm($_GET, $formUri);
 
         //setup pagination
         $redirect = 'admin.posts';
@@ -105,7 +106,7 @@ class AdminPostActions extends ModuleFunction
             $posts = $this->postsTable->FindResultLimit($Pagination->GetLimit(), $Pagination->getDbElementDisplay());
         }
         //render view
-        return $this->Render('post\posts', ['form' => $form, 'posts' => $posts, 'dataPagination' => $Pagination]);
+        return  $this->moduleFunction->Render('post\posts', ['form' => $form, 'posts' => $posts, 'dataPagination' => $Pagination]);
     }
 
     /**
@@ -119,11 +120,8 @@ class AdminPostActions extends ModuleFunction
         $body = $request->getParsedBody();
 
         // build form
-        $formUri = $this->router->generateUri('admin.posts.new.POST');
-        $formClass = ['class' => 'form-group'];
-        $All_category = $this->categoryTable->FindAll();
-        $formCategory = $this->postModel->BuildArraySelect($All_category, 'id', 'name');
-        $form = $this->postModel->BuildPostMangerForm($body, $formUri, $formClass, $formCategory);
+        $formUri =  $this->moduleFunction->getRouter()->generateUri('admin.posts.new.POST');
+        $form = $this->postModel->BuildPostMangerForm($body, $formUri);
 
         //process add post
         if ($request->getMethod() == 'POST'){
@@ -143,7 +141,7 @@ class AdminPostActions extends ModuleFunction
             if ($validator->isValid()) {
                 $this->postsTable->NewPost($body['name'], $body['content'], $body['slug'], $body["active"], $body['category']);
                 $this->flash->success('post has been create');
-                return $this->router->redirect('admin.posts');
+                return  $this->moduleFunction->getRouter()->redirect('admin.posts');
             }else{
                 $errorList = '';
                 foreach ($validator->getError() as $element){
@@ -154,7 +152,7 @@ class AdminPostActions extends ModuleFunction
             }
         }
 
-        return $this->Render('post\postNew',['form' => $form ]);
+        return  $this->moduleFunction->Render('post\postNew',['form' => $form ]);
     }
 
     /**
@@ -171,14 +169,10 @@ class AdminPostActions extends ModuleFunction
 
         //get article
         $post = $this->postModel->GetPostById($RequestId);
-        if (!$post){return $this->router->redirect('admin.index');}
-        $All_category = $this->categoryTable->FindAll();
-
-        $formCategory = $this->postModel->BuildArraySelect($All_category, 'id', 'name');
+        if (!$post){return  $this->moduleFunction->getRouter()->redirect('admin.index');}
 
         //setup form
-        $formUri = $this->router->generateUri('admin.posts.edit.POST', ['id' => $post->id]);
-        $formClass = ['class' => 'form-group'];
+        $formUri =  $this->moduleFunction->getRouter()->generateUri('admin.posts.edit.POST', ['id' => $post->id]);
         $active = SnippetUtils::CheckBoxFormToBool($post->active);
 
         if (empty($body)){
@@ -192,7 +186,7 @@ class AdminPostActions extends ModuleFunction
                 'category' => $post->category->name,
             ];
         }else{if (isset($body['active'])){$body['active'] = true;}else{$body['active'] = false;};}
-        $form = $this->postModel->BuildPostMangerForm($body, $formUri, $formClass, $formCategory);
+        $form = $this->postModel->BuildPostMangerForm($body, $formUri);
 
         //add post process
         if ($request->getMethod() == 'POST'){
@@ -212,7 +206,7 @@ class AdminPostActions extends ModuleFunction
             if ($validator->isValid()) {
                 $this->postsTable->UpdatePost($RequestId, $body['name'], $body['content'], $body['slug'], $body['active'], $body['category']);
                 $this->flash->success('post has been update');
-                return $this->router->redirect('admin.posts');
+                return  $this->moduleFunction->getRouter()->redirect('admin.posts');
             }else{
                 $errorList = '';
                 foreach ($validator->getError() as $element){
@@ -223,7 +217,7 @@ class AdminPostActions extends ModuleFunction
             }
         }
 
-        return $this->Render('post\postEdit', ['post' => $post, 'form' => $form]);
+        return  $this->moduleFunction->Render('post\postEdit', ['post' => $post, 'form' => $form]);
     }
 
     /**
@@ -236,15 +230,15 @@ class AdminPostActions extends ModuleFunction
         $RequestId = $request->getAttribute('id');
         //get article
         $post = $this->postsTable->FindById($RequestId);
-        if ($post == false){return $this->router->redirect('admin.index');}
+        if ($post == false){return  $this->moduleFunction->getRouter()->redirect('admin.index');}
 
         //process delete posts
         if (isset($_GET['confirm'])){
             $this->postsTable->DeleteById($RequestId);
             $this->flash->warning('post has been delete');
-            return $this->router->redirect('admin.posts');
+            return  $this->moduleFunction->getRouter()->redirect('admin.posts');
         }
 
-        return $this->Render('post\postDelete', ['post' => $post ]);
+        return  $this->moduleFunction->Render('post\postDelete', ['post' => $post ]);
     }
 }

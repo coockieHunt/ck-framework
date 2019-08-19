@@ -5,49 +5,51 @@ namespace app\Modules\Admin\Actions;
 
 
 use app\ModuleFunction;
-use app\Modules\Blog\Table\PostsTable;
-use ck_framework\FormBuilder\FormBuilder;
-use ck_framework\Renderer\RendererInterface;
-use ck_framework\Router\Router;
+use app\Modules\Admin\Model\AdminModel;
+use app\Modules\Admin\Model\RouterModel;
 use ck_framework\Session\FlashService;
 use ck_framework\Validator\Validator;
 use Exception;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 
-class AdminActions extends ModuleFunction
+class AdminActions
 {
-    /**
-     * @var PostsTable
-     */
-    private $postsTable;
     /**
      * @var FlashService
      */
     private $flash;
 
     /**
+     * @var RouterModel
+     */
+    private $routerModel;
+    /**
+     * @var AdminModel
+     */
+    private $adminModel;
+    /**
+     * @var ModuleFunction
+     */
+    private $moduleFunction;
+
+    /**
      * AdminActions constructor.
-     * @param Router $router
-     * @param RendererInterface $renderer
-     * @param ContainerInterface $container
+     * @param ModuleFunction $moduleFunction
      * @param FlashService $flash
-     * @param PostsTable $postsTable
+     * @param RouterModel $routerModel
+     * @param AdminModel $adminModel
      * @throws Exception
      */
-    public function __construct(
-        Router $router,
-        RendererInterface  $renderer,
-        ContainerInterface $container ,
-        FlashService $flash,
-        PostsTable $postsTable
-    )
+    public function __construct(ModuleFunction $moduleFunction,FlashService $flash, RouterModel $routerModel, AdminModel $adminModel)
     {
         $dir = substr(__DIR__, 0, strrpos(__DIR__, DIRECTORY_SEPARATOR));
-        parent::init($router, $renderer, $container,  $dir);
-        $this->postsTable = $postsTable;
         $this->flash = $flash;
+        $this->routerModel = $routerModel;
+        $this->adminModel = $adminModel;
+        $this->moduleFunction = $moduleFunction;
+
+        $this->moduleFunction->init($dir, $this);
     }
 
     /**
@@ -55,12 +57,7 @@ class AdminActions extends ModuleFunction
      * @return mixed
      */
     public function index(){
-        $count = [
-            "route" => count($this->router->getRouteList()),
-            "posts" => count($this->postsTable->FindAll()),
-        ];
-
-        return $this->Render('index',["count" => $count]);
+        return $this->moduleFunction->Render('index',["count" => $this->adminModel->CountData()]);
     }
 
     /**
@@ -68,8 +65,8 @@ class AdminActions extends ModuleFunction
      * @return mixed
      */
     public function routing(){
-        $list = $this->router->getRouteList();
-        return $this->Render('routing\routing', ['routing' => $list]);
+        $list = $this->moduleFunction->getRouter()->getRouteList();
+        return $this->moduleFunction->Render('routing\routing', ['routing' => $list]);
     }
 
     public function routingBuild(Request $request){
@@ -78,31 +75,16 @@ class AdminActions extends ModuleFunction
         //get uri Attribute
         $RequestName = $request->getAttribute('name');
         $NameParse = str_replace('-', '.', $RequestName);
-        $RouteList = $this->router->getRouteList();
 
-        $thisRoute = null;
-        foreach ($RouteList as $route){
-            if ($route['name'] == $NameParse){
-                $thisRoute = $route;
-            }
-        }
-        if ($thisRoute === null){return $this->router->redirect('admin.routing');};
+        //check if route is declared
+        $currentRoute = $this->routerModel->issetRoute($NameParse);
+        if ($currentRoute === null){return $this->moduleFunction->getRouter()->redirect('admin.routing');};
 
-        $uri = str_replace('.', '-', $thisRoute['name']);
-        $formUri = $this->router->generateUri('admin.routing.build.POST', ['name' => $uri]);
-        $formClass = ['class' => 'form-group'];
-        $form = (new FormBuilder($formUri, 'POST', $formClass))
-            ->setArgs($body);
-
-        $params = $thisRoute['params'];
-        foreach ($params as $key => $value){
-            $form ->text($key,
-                $value,
-                $key . ' :',
-                ['class' => 'form-control']);
-        }
+        //build form
+        $form = $this->routerModel->BuildFormBuilderForm($currentRoute, $body);
 
         if ($request->getMethod() == 'POST'){
+            $params = $currentRoute['params'];
             $validator = (new Validator($body));
             foreach ($body as $key => $value){
                 $regex = $params[$key];
@@ -115,7 +97,7 @@ class AdminActions extends ModuleFunction
             }
 
             if ($validator->isValid()){
-                return $this->router->redirect($thisRoute['name'], $body);
+                return $this->moduleFunction->getRouter()->redirect($currentRoute['name'], $body);
             }else{
                 $errorList = '';
                 foreach ($validator->getError() as $element){
@@ -126,10 +108,6 @@ class AdminActions extends ModuleFunction
             }
         }
 
-        return $this->Render('routing\routingBuilder', ['routeName' => $thisRoute['name'], 'form' => $form]);
-    }
-
-    public function newDash(){
-        return $this->Render('DashNew');
+        return $this->moduleFunction->Render('routing\routingBuilder', ['routeName' => $currentRoute['name'], 'form' => $form]);
     }
 }

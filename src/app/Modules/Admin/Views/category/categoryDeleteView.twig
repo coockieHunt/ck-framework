@@ -13,10 +13,45 @@
     category slug :
     <p><strong>{{ category.slug }}</strong></p>
 
-    <a href="{{ generateUri('admin.category.delete', {id: category.id}, {'confirm': 'ok'}) }}" class="btn btn-danger btn-icon-split">
-                                    <span class="icon text-white-50">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </span>
-        <span class="text">Delete</span>
-    </a>
+    <h3>Post linked :</h3>
+    <p>
+
+    </p>
+    <div class="collapse" id="CustomCategory">
+        <div class="card card-body">
+            <a  data-toggle="collapse" href="#CustomCategory" role="button" aria-expanded="false" aria-controls="CustomCategory">
+                <span>Custom category select</span>
+                <i class="float-right fas fa-times"></i>
+            </a>
+            {{ formStart(formCustom) }}
+            {{ formBuild(formCustom) }}
+            {{ formSubmit(formCustom, 'Delete', {class: "btn btn-danger"}) }}
+            {{ formEnd(formCustom) }}
+        </div>
+    </div>
+    <div id="custom">
+        <div>
+        </div>
+        {{ formStart(form) }}
+        <div class="float-right">
+            <a class="font-weight-bold" data-toggle="collapse" href="#CustomCategory" role="button" aria-expanded="false" aria-controls="CustomCategory">
+                custom
+                <i class="fas fa-plus"></i>
+            </a>
+        </div>
+        {{ formBuild(form) }}
+        {{ formSubmit(formCustom, 'Delete', {class: "btn btn-danger"}) }}
+        {{ formEnd(form) }}
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+    <script>
+        let collapse = $('#CustomCategory');
+        let collapse_close = $('#CustomCategory');
+        let custom = $('#custom');
+        collapse.on('show.bs.collapse', function () {custom.hide(250)});
+        collapse.on('hide.bs.collapse', function () {custom.show(250)});
+    </script>
 {% endblock %}

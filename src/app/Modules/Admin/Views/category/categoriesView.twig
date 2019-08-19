@@ -93,8 +93,8 @@
                                 <tr>
                                     <td>{{ category.name }}</td>
                                     <td>{{ category.slug }}</td>
-                                    <td>{{ category.create_at|date("m/d/Y") }} <br> {{ post.create_at|date("H:i:s") }}</td>
-                                    <td >{{ category.update_at|date("m/d/Y") }} <br> {{ post.update_at|date("H:i:s") }}</td>
+                                    <td>{{ category.create_at|date("m/d/Y") }} at {{ post.create_at|date("H:i:s") }}</td>
+                                    <td >{{ category.update_at|date("m/d/Y") }} at {{ post.update_at|date("H:i:s") }}</td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-primary btn-icon-split" type="button" id="dropdownMenuAction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">

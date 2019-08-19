@@ -14,12 +14,23 @@ use ck_framework\Router\Router;
 use Psr\Container\ContainerInterface;
 use Exception;
 
-class AdminModule extends ModuleFunction
+class AdminModule
 {
     CONST DEFINITIONS = __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
+    /**
+     * @var ModuleFunction
+     */
+    private $moduleFunction;
 
-    public function __construct(Router $router, RendererInterface  $renderer, ContainerInterface $container, PostsTable $postsTable){
-        parent::init($router, $renderer, $container, __DIR__);
+    /**
+     * AdminModule constructor.
+     * @param ModuleFunction $moduleFunction
+     * @throws Exception
+     */
+    public function __construct(ModuleFunction $moduleFunction){
+        $this->moduleFunction = $moduleFunction;
+
+        $this->moduleFunction->init(__DIR__, $this);
     }
 
     /**
@@ -41,7 +52,7 @@ class AdminModule extends ModuleFunction
         /***
          * MAIN ROUTE
          */
-        $this->AddRoute(
+        $this->moduleFunction->AddRoute(
             '/',
             [AdminActions::class, 'index'],
             'admin.index'
@@ -50,13 +61,13 @@ class AdminModule extends ModuleFunction
         /***
          * ROUTER ROUTE
          */
-        $this->AddRoute(
+        $this->moduleFunction->AddRoute(
             '/route',
             [AdminActions::class, 'routing'],
             'admin.routing'
         );
 
-        $this->AddRoute(
+        $this->moduleFunction->AddRoute(
             '/route/build/{name:[a-z\-]+}',
             [AdminActions::class, 'routingBuild'],
             'admin.routing.build',
@@ -67,26 +78,27 @@ class AdminModule extends ModuleFunction
         /***
          * POSTS CATEGORY
          */
-        $this->AddRoute(
+        $this->moduleFunction->AddRoute(
             '/category',
             [AdminCategoryActions::class, 'category'],
             'admin.category'
         );
 
-        $this->AddRoute(
+        $this->moduleFunction->AddRoute(
             '/category/new',
             [AdminCategoryActions::class, 'categoryNew'],
             'admin.category.new',
             ['GET','POST']
         );
 
-        $this->AddRoute(
+        $this->moduleFunction->AddRoute(
             '/category/delete/{id:[0-9]+}',
             [AdminCategoryActions::class, 'categoryDelete'],
-            'admin.category.delete'
+            'admin.category.delete',
+            ['GET','POST']
         );
 
-        $this->AddRoute(
+        $this->moduleFunction->AddRoute(
             '/category/edit/{id:[0-9]+}',
             [AdminCategoryActions::class, 'categoryEdit'],
             'admin.category.edit',
@@ -95,27 +107,27 @@ class AdminModule extends ModuleFunction
         /***
          * POST ROUTE
          */
-        $this->AddRoute(
+        $this->moduleFunction->AddRoute(
             '/post',
             [AdminPostActions::class, 'posts'],
             'admin.posts'
         );
 
-        $this->AddRoute(
+        $this->moduleFunction->AddRoute(
             '/post/new',
             [AdminPostActions::class, 'postNew'],
             'admin.posts.new',
             ['GET','POST']
         );
 
-        $this->AddRoute(
+        $this->moduleFunction->AddRoute(
             '/post/edit/{id:[0-9]+}',
             [AdminPostActions::class, 'postEdit'],
             'admin.posts.edit',
             ['GET','POST']
         );
 
-        $this->AddRoute(
+        $this->moduleFunction->AddRoute(
             '/post/delete/{id:[0-9]+}',
             [AdminPostActions::class, 'postDelete'],
             'admin.posts.delete'

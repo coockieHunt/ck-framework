@@ -127,7 +127,7 @@ class FormBuilder
         $form = sprintf($form, $name, $formArgs, $value);
 
         $formLabel = '<label >%s</label>';
-        $formLabel = sprintf($formLabel, $label);
+        $formLabel = sprintf($formLabel, ucfirst($label));
 
         $build = [
             $divForm,
@@ -158,6 +158,18 @@ class FormBuilder
     }
 
     /**
+     * add hidden input
+     * @param string $name
+     * @param string $value
+     * @return FormBuilder
+     */
+    public function hidden(string $name, string $value):self {
+        $form = sprintf(  '<input name="%s" type="hidden" value="%s">', $name, $value);
+        $this->setForm($form);
+        return $this;
+    }
+
+    /**
      * add text area input
      * @param string $name
      * @param int $rows
@@ -176,7 +188,7 @@ class FormBuilder
 
         $build = [
             '<div '. $div .'>',
-            '<label for="'. $name .'">' . $label . '</label> ',
+            '<label for="'. $name .'">' . ucfirst($label) . '</label> ',
             $form,
             '</div>',
         ];
@@ -203,7 +215,7 @@ class FormBuilder
 
         $build = [
             '<div '. $div .'>',
-            '<label for="'. $name .'">' . $label . '</label> ',
+            '<label for="'. $name .'">' . ucfirst($label) . '</label> ',
             $form,
             $optionParse,
             '</select>',
@@ -311,7 +323,7 @@ class FormBuilder
         }else{
             $build = [
                 '<div '. $div .'>',
-                '<label for="'. $name .'">' . $label . '</label> ',
+                '<label for="'. $name .'">' . ucfirst($label) . '</label> ',
                 $form,
                 '</div>',
             ];

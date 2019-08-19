@@ -54,7 +54,7 @@ class Table
         $response = $this->PDO
             ->query('SELECT COUNT(*) FROM ' . $this->tableName)
             ->fetch();
-        return $response;
+        return $response[0];
     }
 
     /**

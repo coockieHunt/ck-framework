@@ -8,6 +8,7 @@ use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
 use Psr\Container\ContainerInterface;
 use Exception;
+use stdClass;
 
 class ModuleFunction
 {
@@ -18,28 +19,34 @@ class ModuleFunction
     /**
      * @var Router
      */
-    public $router;
+    private $router;
     /**
      * @var RendererInterface
      */
-    public $renderer;
+    private $renderer;
     /**
      * @var ContainerInterface
      */
-    public $container;
-
+    private $container;
     /**
-     * @param Router $router
-     * @param RendererInterface $renderer
-     * @param ContainerInterface $container
-     * @param string $directory
-     * @throws Exception
+     * @var stdClass
      */
-    protected function init(Router $router, RendererInterface $renderer, ContainerInterface $container, string $directory){
+    private $className;
+
+    public function __construct(Router $router, ContainerInterface $container, RendererInterface $renderer)
+    {
         $this->router = $router;
         $this->renderer = $renderer;
         $this->container = $container;
+    }
 
+    /**
+     * @param string $directory
+     * @param $class
+     * @throws Exception
+     */
+    public function init(string $directory, $class){
+        $this->className = $class;
         $this->AddViewFolder($directory);
     }
 
@@ -49,7 +56,7 @@ class ModuleFunction
      * @param array|null $params
      * @return mixed
      */
-    protected function Render(string $view, ?array $params = [])
+    public function Render(string $view, ?array $params = [])
     {
         if (is_null($params)) {
             return $this->renderer->Render("@" . $this->GetClassName() . "/" . $view);
@@ -82,7 +89,7 @@ class ModuleFunction
      */
     private function GetClassName() : string
     {
-        $namespace = explode('\\', get_class($this));
+        $namespace = explode('\\', get_class($this->className));
         return end($namespace);
     }
 
@@ -96,7 +103,7 @@ class ModuleFunction
     }
 
     public function AddRoute(string $uri, array $function, $name = null, array $method = ['GET'], bool $use_prefix = true){
-        $namespace = explode('\\', get_class($this));
+        $namespace = explode('\\', get_class($this->className));
         $prefix = null;
         if ($uri == "/"){$uri = "";};
         if ($use_prefix){
@@ -130,8 +137,13 @@ class ModuleFunction
                     break;
             }
         }
+    }
 
-
-
+    /**
+     * @return Router
+     */
+    public function getRouter(): Router
+    {
+        return $this->router;
     }
 }

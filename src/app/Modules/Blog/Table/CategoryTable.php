@@ -5,6 +5,7 @@ namespace app\Modules\Blog\Table;
 
 
 use app\Modules\Blog\Entity\CategoryEntity;
+use app\Modules\Blog\Entity\PostsEntity;
 use ck_framework\Database\Table;
 use PDO;
 
@@ -57,6 +58,29 @@ class CategoryTable extends Table
      */
     public function FindById(int $id){
         return $this->FindByValue('id', $id, PDO::PARAM_STR);
+    }
+
+    /**
+     * get list post linked on category
+     * @param int $id
+     * @return array
+     */
+    public function getPostsLinked(int $id){
+        $request = $this->PDO
+            ->prepare('SELECT * FROM posts WHERE posts.id_category = :id');
+        $request->bindValue(':id', $id, PDO::PARAM_STR);
+        $request->execute();
+        if ($this->entity){$request->setFetchMode(PDO::FETCH_CLASS, PostsEntity::class);}
+        $response = $request->fetchAll();
+        return $response;
+    }
+
+    public function updatePostCategory($key, $value){
+        $request = $this->PDO
+            ->prepare('update posts set id_category = :category_id where id = :post_id ');
+        $request->bindValue(':category_id', $value, PDO::PARAM_STR);
+        $request->bindValue(':post_id', $key, PDO::PARAM_STR);
+        $request->execute();
     }
 
     public function FindResultLimitFilter(string $name, string $slug, int $limit, int $offset) :array{

@@ -7,22 +7,32 @@ namespace app\Modules\Blog\Actions;
 use app\ModuleFunction;
 use app\Modules\Blog\Table\PostsTable;
 use ck_framework\Pagination\Pagination;
-use ck_framework\Renderer\RendererInterface;
-use ck_framework\Router\Router;
 use ParsedownExtra;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * @property PostsTable postsTable
  */
-class BlogActions extends ModuleFunction
+class BlogActions
 {
-    public function __construct(Router $router, RendererInterface  $renderer, ContainerInterface $container, PostsTable $postsTable)
+    /**
+     * @var ModuleFunction
+     */
+    private $moduleFunction;
+
+    /**
+     * BlogActions constructor.
+     * @param ModuleFunction $moduleFunction
+     * @param PostsTable $postsTable
+     * @throws \Exception
+     */
+    public function __construct(ModuleFunction $moduleFunction, PostsTable $postsTable)
     {
         $dir = substr(__DIR__, 0, strrpos(__DIR__, DIRECTORY_SEPARATOR));
-        parent::init($router, $renderer, $container,  $dir);
         $this->postsTable = $postsTable;
+        $this->moduleFunction = $moduleFunction;
+
+        $this->moduleFunction->init($dir, $this);
     }
 
     public function show(Request $request){
@@ -45,8 +55,8 @@ class BlogActions extends ModuleFunction
 
         //render page or redirect if uri not clear (slug or id not complete)
         if ($postId == $RequestId && $postSlug == $RequestSlug){
-            return $this->Render("show" , ['post' => $post]);
-        }else{return $this->router->redirect("posts.show", ['slug' => $postSlug, 'id' => $postId]);}
+            return $this->moduleFunction->Render("show" , ['post' => $post]);
+        }else{return $this->moduleFunction->getRouter()->redirect("posts.show", ['slug' => $postSlug, 'id' => $postId]);}
     }
 
     public function index()
@@ -74,8 +84,8 @@ class BlogActions extends ModuleFunction
             }
         }
 
-        if (empty($posts)){return $this->router->redirect($redirect, [], ['p' => 1]);}
-        return $this->Render("index" ,
+        if (empty($posts)){return $this->moduleFunction->getRouter()->redirect($redirect, [], ['p' => 1]);}
+        return $this->moduleFunction->Render("index" ,
             [
                 'posts' => $postsActive,
                 'dataPagination' => $Pagination

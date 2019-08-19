@@ -5,38 +5,30 @@ namespace app\Modules\Blog;
 use app\ModuleFunction;
 use app\Modules\Blog\Actions\BlogActions;
 use app\Modules\Blog\Table\PostsTable;
-use ck_framework\Pagination\Pagination;
-use ck_framework\Renderer\RendererInterface;
-use ck_framework\Router\Router;
 use Exception;
-use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ServerRequestInterface as Request;
 
 
-
-class BlogModule extends ModuleFunction
+class BlogModule
 {
 
     CONST DEFINITIONS = __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
-    CONST MIGRATIONS = __DIR__ . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'migrations';
-    CONST SEEDS =  __DIR__ . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'seeds';
+    CONST MIGRATIONS = __DIR__ . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'migrations';
+    CONST SEEDS =  __DIR__ . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'seeds';
 
     /**
-     * @var PostsTable
+     * @var ModuleFunction
      */
-    private $postsTable;
+    private $moduleFunction;
 
     /**
      * BlogModule constructor.
-     * @param Router $router
-     * @param RendererInterface $renderer
-     * @param ContainerInterface $container
-     * @param PostsTable $postsTable
+     * @param ModuleFunction $moduleFunction
      * @throws Exception
      */
-    public function __construct(Router $router, RendererInterface  $renderer, ContainerInterface $container, PostsTable $postsTable){
-        parent::init($router, $renderer, $container, __DIR__);
-        $this->postsTable = $postsTable;
+    public function __construct(ModuleFunction $moduleFunction){
+        $this->moduleFunction = $moduleFunction;
+
+        $this->moduleFunction->init(__DIR__, $this);
     }
 
     /**
@@ -53,13 +45,13 @@ class BlogModule extends ModuleFunction
      * @throws Exception
      */
     public function ListRoute(): void {
-        $this->AddRoute(
+        $this->moduleFunction->AddRoute(
             '/',
             [BlogActions::class, 'index'],
             'posts.index'
         );
 
-        $this->AddRoute(
+        $this->moduleFunction->AddRoute(
             '/{slug:[a-z\-0-9]+}-{id:[0-9]+}',
             [BlogActions::class, 'show'],
             'posts.show'

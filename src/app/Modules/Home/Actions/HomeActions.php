@@ -7,17 +7,30 @@ namespace app\Modules\Home\Actions;
 use app\ModuleFunction;
 use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
+use Exception;
 use Psr\Container\ContainerInterface;
 
-class HomeActions extends ModuleFunction
+class HomeActions
 {
-    public function __construct(Router $router, RendererInterface  $renderer, ContainerInterface $container){
+    /**
+     * @var ModuleFunction
+     */
+    private $moduleFunction;
+
+    /**
+     * HomeActions constructor.
+     * @param ModuleFunction $moduleFunction
+     * @throws Exception
+     */
+    public function __construct(ModuleFunction $moduleFunction){
         $dir = substr(__DIR__, 0, strrpos(__DIR__, DIRECTORY_SEPARATOR));
-        parent::init($router, $renderer, $container,  $dir);
+        $this->moduleFunction = $moduleFunction;
+
+        $this->moduleFunction->init($dir, $this);
     }
 
     public function index(): string
     {
-        return $this->Render("index");
+        return $this->moduleFunction->Render("index");
     }
 }

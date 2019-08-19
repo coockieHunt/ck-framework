@@ -59,7 +59,7 @@ class RendererPagination
             $frame = $template::get('justify-content-left')['frame'];
             $current = $template::get('float: right;')['current'];
 
-            $rslt[] = $frame['start'];
+            $result[] = $frame['start'];
 
             $first = $catch_number[0];
             $end = $catch_number[count($catch_number) - 1];
@@ -86,14 +86,14 @@ class RendererPagination
                         $element = $template::get('', $current)['element'];
                     }
 
-                    $rslt[] = str_replace(":custom", $uri, $element);
+                    $result[] = str_replace(":custom", $uri, $element);
 
                 }
             }
 
-            $rslt[] = $frame['end'];
+            $result[] = $frame['end'];
 
-            return $rslt;
+            return $result;
         } else {
             throw new Exception('template found');
         }

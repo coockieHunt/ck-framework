@@ -9,21 +9,26 @@ use app\Modules\Home\Actions\HomeActions;
 use ck_framework\Renderer\RendererInterface;
 use ck_framework\Router\Router;
 use Exception;
+use PhpParser\Node\Expr\AssignOp\Mod;
 use Psr\Container\ContainerInterface;
 
-class HomeModule extends ModuleFunction
+class HomeModule
 {
     CONST DEFINITIONS = __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
+    /**
+     * @var ModuleFunction
+     */
+    private $moduleFunction;
 
     /**
      * BlogModule constructor.
-     * @param Router $router
-     * @param RendererInterface $renderer
-     * @param ContainerInterface $container
+     * @param ModuleFunction $moduleFunction
      * @throws Exception
      */
-    public function __construct(Router $router, RendererInterface  $renderer, ContainerInterface $container){
-        parent::init($router, $renderer, $container,  __DIR__);
+    public function __construct(ModuleFunction $moduleFunction){
+        $this->moduleFunction = $moduleFunction;
+
+        $this->moduleFunction->init(__DIR__, $this);
     }
 
     /**
@@ -40,7 +45,7 @@ class HomeModule extends ModuleFunction
      * @throws Exception
      */
     public function ListRoute(): void {
-        $this->AddRoute(
+        $this->moduleFunction->AddRoute(
             '/',
             [HomeActions::class, 'index'],
             'home.index'

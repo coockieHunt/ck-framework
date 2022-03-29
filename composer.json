@@ -18,7 +18,7 @@
   },
   "require": {
     "ext-pdo": "*",
-    "guzzlehttp/psr7": "1.6.1",
+    "guzzlehttp/psr7": "1.8.4",
     "http-interop/response-sender": "1.0.0",
     "zendframework/zend-expressive-fastroute": "3.0.3",
     "twig/twig": "3.x-dev",
